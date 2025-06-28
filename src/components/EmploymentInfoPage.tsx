@@ -15,7 +15,7 @@ import {
   Radio,
   Stack,
 } from "@chakra-ui/react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +45,16 @@ const schema = yup.object({
   monthlyIncomeCommission: yup.string(),
   monthlyIncomeMilitary: yup.string(),
   monthlyIncomeOther: yup.string(),
+  otherIncome: yup.array().of(
+    yup.object({
+      source: yup.string().nullable(),
+      amount: yup.string().when("source", {
+        is: (val: string) => val && val !== "",
+        then: (schema) => schema.required("Amount is required"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+    })
+  ),
 });
 
 export const EmploymentInfoPage: React.FC = () => {
@@ -58,6 +68,14 @@ export const EmploymentInfoPage: React.FC = () => {
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: {
+      otherIncome: [],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "otherIncome",
   });
 
   const onSubmit = (data: any) => {
@@ -293,6 +311,86 @@ export const EmploymentInfoPage: React.FC = () => {
                   </FormErrorMessage>
                 </FormControl>
               ))}
+
+              {/* Income from Other Sources */}
+              <VStack spacing={2} align="stretch" w="100%">
+                <FormLabel fontWeight="medium">
+                  Income from Other Sources
+                </FormLabel>
+
+                {fields.map((item, index) => (
+                  <Flex key={item.id} gap={2} align="flex-end">
+                    <FormControl isInvalid={!!errors.otherIncome?.[index]?.source}>
+                      <FormLabel>Source</FormLabel>
+                      <Controller
+                        name={`otherIncome.${index}.source`}
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            as="select"
+                            {...field}
+                            value={field.value ?? ""}
+                          >
+                            
+                            <option value="">Select source</option>
+                            <option value="Alimony">Alimony</option>
+                            <option value="Child Support">Child Support</option>
+                            <option value="VA Compensation">Disability</option>
+                            <option value="Social Security">Retirement</option>
+                            <option value="Retirement">Social Security</option>
+                            <option value="Retirement">VA Compensation</option>
+                            <option value="Other">Other</option>
+                          </Input>
+                        )}
+                      />
+                      <FormErrorMessage>
+                        {errors.otherIncome?.[index]?.source?.message}
+                      </FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={!!errors.otherIncome?.[index]?.amount}>
+                      <FormLabel>Amount</FormLabel>
+                      <Controller
+                        name={`otherIncome.${index}.amount`}
+                        control={control}
+                        render={({ field }) => (
+                          <NumericFormat
+                            {...field}
+                            thousandSeparator
+                            prefix="$"
+                            allowNegative={false}
+                            decimalScale={2}
+                            fixedDecimalScale
+                            customInput={Input}
+                            onValueChange={(values) => {
+                              field.onChange(values.value);
+                            }}
+                            value={field.value ?? ""}
+                          />
+                        )}
+                      />
+                      <FormErrorMessage>
+                        {errors.otherIncome?.[index]?.amount?.message}
+                      </FormErrorMessage>
+                    </FormControl>
+
+                    <Button
+                      variant="outline"
+                      colorScheme="red"
+                      onClick={() => remove(index)}
+                    >
+                      Remove
+                    </Button>
+                  </Flex>
+                ))}
+
+                <Button
+                  variant="outline"
+                  onClick={() => append({ source: "", amount: "" })}
+                >
+                  Add Another Source
+                </Button>
+              </VStack>
             </VStack>
 
             <Flex justify="space-between" mt={8}>
