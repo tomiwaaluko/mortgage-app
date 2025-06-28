@@ -59,7 +59,7 @@ const schema = yup.object({
 
 export const EmploymentInfoPage: React.FC = () => {
   const navigate = useNavigate();
-  const { updatePersonalInfo } = useLoanApp();
+  const { updateEmploymentInfo } = useLoanApp();
 
   const {
     handleSubmit,
@@ -79,8 +79,8 @@ export const EmploymentInfoPage: React.FC = () => {
   });
 
   const onSubmit = (data: any) => {
-    updatePersonalInfo(data);
-    navigate("/assets-info");
+    updateEmploymentInfo(data)
+    navigate("/assets-liabilities");
   };
 
   return (
@@ -394,10 +394,19 @@ export const EmploymentInfoPage: React.FC = () => {
             </VStack>
 
             <Flex justify="space-between" mt={8}>
-              <Button variant="ghost" onClick={() => navigate(-1)}>
+              <Button
+                colorScheme="brand"
+                variant="solid"
+                onClick={() => navigate(-1)}
+              >
                 Back
               </Button>
-              <Button colorScheme="brand" type="submit" isDisabled={!isValid}>
+              <Button
+                colorScheme="brand"
+                variant="solid"
+                type="submit"
+                isDisabled={!isValid}
+              >
                 Continue
               </Button>
             </Flex>

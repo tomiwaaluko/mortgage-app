@@ -1,5 +1,9 @@
 import React, { createContext, useState, useContext } from "react";
 
+/**
+ * Define all the types for your form data
+ */
+
 interface PersonalInfo {
   fullName?: string;
   ssn?: string;
@@ -18,21 +22,117 @@ interface PersonalInfo {
   previousAddress?: string;
 }
 
-// You can later add EmploymentInfo, AssetsInfo, etc.
+interface EmploymentInfo {
+  employerName?: string;
+  phone?: string;
+  street?: string;
+  unit?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  position?: string;
+  startDate?: string;
+  yearsInLineOfWork?: string;
+  monthsInLineOfWork?: string;
+  isSelfEmployed?: boolean;
+  isEmployedByFamily?: boolean;
+  ownershipShare?: string;
+  monthlyIncomeBase?: string;
+  monthlyIncomeOvertime?: string;
+  monthlyIncomeBonus?: string;
+  monthlyIncomeCommission?: string;
+  monthlyIncomeMilitary?: string;
+  monthlyIncomeOther?: string;
+  otherIncome?: { source: string; amount: string }[];
+}
+
+interface AssetsLiabilitiesInfo {
+  assetsAccounts?: { accountType: string; institution: string; accountNumber: string; value: string }[];
+  otherAssets?: { type: string; value: string }[];
+  liabilities?: { accountType: string; company: string; accountNumber: string; balance: string; payment: string; toBePaidOff: boolean }[];
+  otherLiabilities?: { type: string; payment: string }[];
+}
+
+interface RealEstateInfo {
+  ownsRealEstate?: string;
+  properties?: {
+    address: string;
+    propertyValue: string;
+    status: string;
+    occupancy: string;
+    monthlyPayment: string;
+    rentalIncome: string;
+  }[];
+}
+
+interface LoanPropertyInfo {
+  underContract?: string;
+  salesPrice?: string;
+  downPayment?: string;
+  propertyAddress?: string;
+  occupancy?: string;
+  receivingGift?: string;
+  giftAssetType?: string;
+  giftDeposited?: string;
+  giftSource?: string;
+  giftValue?: string;
+}
+
+interface DeclarationsInfo {
+  occupyAsPrimary?: string;
+  ownedPropertyLast3Years?: string;
+  typeOfProperty?: string;
+  titleHeld?: string;
+  relationshipWithSeller?: string;
+  borrowingMoney?: string;
+  borrowingMoneyAmount?: string;
+  mortgageOnOtherProperty?: string;
+  obligatedOnLoan?: string;
+  cosigner?: string;
+  borrowedDownPayment?: string;
+  declaredForeclosure?: string;
+  declaredBankruptcy?: string;
+  bankruptcyTypes?: string[];
+}
+
 interface LoanAppData {
   personalInfo: PersonalInfo;
+  employmentInfo: EmploymentInfo;
+  assetsLiabilities: AssetsLiabilitiesInfo;
+  realEstate: RealEstateInfo;
+  loanProperty: LoanPropertyInfo;
+  declarations: DeclarationsInfo;
 }
 
 interface LoanAppContextType {
   data: LoanAppData;
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
+  updateEmploymentInfo: (info: Partial<EmploymentInfo>) => void;
+  updateAssetsLiabilities: (info: Partial<AssetsLiabilitiesInfo>) => void;
+  updateRealEstate: (info: Partial<RealEstateInfo>) => void;
+  updateLoanProperty: (info: Partial<LoanPropertyInfo>) => void;
+  updateDeclarations: (info: Partial<DeclarationsInfo>) => void;
 }
 
+/**
+ * Create Context
+ */
+
 const LoanAppContext = createContext<LoanAppContextType | undefined>(undefined);
+
+/**
+ * Provider
+ */
 
 export const LoanAppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<LoanAppData>({
     personalInfo: {},
+    employmentInfo: {},
+    assetsLiabilities: {},
+    realEstate: {},
+    loanProperty: {},
+    declarations: {},
   });
 
   const updatePersonalInfo = (info: Partial<PersonalInfo>) => {
@@ -42,13 +142,61 @@ export const LoanAppProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }));
   };
 
+  const updateEmploymentInfo = (info: Partial<EmploymentInfo>) => {
+    setData(prev => ({
+      ...prev,
+      employmentInfo: { ...prev.employmentInfo, ...info },
+    }));
+  };
+
+  const updateAssetsLiabilities = (info: Partial<AssetsLiabilitiesInfo>) => {
+    setData(prev => ({
+      ...prev,
+      assetsLiabilities: { ...prev.assetsLiabilities, ...info },
+    }));
+  };
+
+  const updateRealEstate = (info: Partial<RealEstateInfo>) => {
+    setData(prev => ({
+      ...prev,
+      realEstate: { ...prev.realEstate, ...info },
+    }));
+  };
+
+  const updateLoanProperty = (info: Partial<LoanPropertyInfo>) => {
+    setData(prev => ({
+      ...prev,
+      loanProperty: { ...prev.loanProperty, ...info },
+    }));
+  };
+
+  const updateDeclarations = (info: Partial<DeclarationsInfo>) => {
+    setData(prev => ({
+      ...prev,
+      declarations: { ...prev.declarations, ...info },
+    }));
+  };
+
   return (
-    <LoanAppContext.Provider value={{ data, updatePersonalInfo }}>
+    <LoanAppContext.Provider
+      value={{
+        data,
+        updatePersonalInfo,
+        updateEmploymentInfo,
+        updateAssetsLiabilities,
+        updateRealEstate,
+        updateLoanProperty,
+        updateDeclarations,
+      }}
+    >
       {children}
     </LoanAppContext.Provider>
   );
 };
 
+/**
+ * Hook
+ */
 export const useLoanApp = (): LoanAppContextType => {
   const context = useContext(LoanAppContext);
   if (!context) {

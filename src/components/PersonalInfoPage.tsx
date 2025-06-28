@@ -316,10 +316,19 @@ export const PersonalInfoPage: React.FC = () => {
             </VStack>
 
             <Flex justify="space-between" mt={8}>
-              <Button variant="ghost" onClick={() => navigate(-1)}>
+              <Button
+                colorScheme="brand"
+                variant="solid"
+                onClick={() => navigate(-1)}
+              >
                 Back
               </Button>
-              <Button colorScheme="brand" type="submit" isDisabled={!isValid}>
+              <Button
+                colorScheme="brand"
+                variant="solid"
+                type="submit"
+                isDisabled={!isValid}
+              >
                 Continue
               </Button>
             </Flex>
