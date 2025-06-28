@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import { WelcomePage } from "./components/WelcomePage";
 import { PersonalInfoPage } from "./components/PersonalInfoPage";
 import { EmploymentInfoPage } from "./components/EmploymentInfoPage";
-import { Layout } from "./components/Layout";
+import { Layout } from "./functions/Layout";
 import { ScrollToTop } from "./components/ScrollToTop";
 
 function App() {

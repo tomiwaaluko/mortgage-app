@@ -9,7 +9,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { AnimatedPage } from "./AnimatedPage";
+import { AnimatedPage } from "../functions/AnimatedPage";
 
 export const WelcomePage: React.FC = () => {
   const navigate = useNavigate();

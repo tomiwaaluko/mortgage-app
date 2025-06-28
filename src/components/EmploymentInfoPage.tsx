@@ -19,7 +19,7 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { AnimatedPage } from "./AnimatedPage";
+import { AnimatedPage } from "../functions/AnimatedPage";
 import { useLoanApp } from "../context/LoanAppContext";
 import { NumericFormat } from "react-number-format";
 
