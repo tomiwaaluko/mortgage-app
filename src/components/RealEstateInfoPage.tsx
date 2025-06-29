@@ -46,7 +46,7 @@ const getErrorMessage = (err: any) => {
 
 export const RealEstateInfoPage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateRealEstate } = useLoanApp();
+  const { data, updateRealEstate } = useLoanApp();
 
   const {
     handleSubmit,
@@ -59,6 +59,7 @@ export const RealEstateInfoPage: React.FC = () => {
     defaultValues: {
       ownsRealEstate: "",
       properties: [],
+      ...data.realEstate, // ✅ merge saved data if editing
     },
   });
 

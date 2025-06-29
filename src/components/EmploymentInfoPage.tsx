@@ -59,7 +59,7 @@ const schema = yup.object({
 
 export const EmploymentInfoPage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateEmploymentInfo } = useLoanApp();
+  const { data, updateEmploymentInfo } = useLoanApp();
 
   const {
     handleSubmit,
@@ -69,7 +69,29 @@ export const EmploymentInfoPage: React.FC = () => {
     resolver: yupResolver(schema),
     mode: "onChange",
     defaultValues: {
+      employerName: "",
+      phone: "",
+      street: "",
+      unit: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+      position: "",
+      startDate: "",
+      yearsInLineOfWork: "",
+      monthsInLineOfWork: "",
+      isSelfEmployed: false,
+      isEmployedByFamily: false,
+      ownershipShare: "",
+      monthlyIncomeBase: "",
+      monthlyIncomeOvertime: "",
+      monthlyIncomeBonus: "",
+      monthlyIncomeCommission: "",
+      monthlyIncomeMilitary: "",
+      monthlyIncomeOther: "",
       otherIncome: [],
+      ...data.employmentInfo, // pre-fill if any
     },
   });
 
@@ -211,7 +233,16 @@ export const EmploymentInfoPage: React.FC = () => {
                   <Controller
                     name="yearsInLineOfWork"
                     control={control}
-                    render={({ field }) => <Input {...field} />}
+                    render={({ field }) => (
+                      <Input as="select" {...field} value={field.value ?? ""}>
+                        <option value="">Years</option>
+                        {Array.from({ length: 30 }, (_, i) => (
+                          <option key={i} value={i.toString()}>
+                            {i}
+                          </option>
+                        ))}
+                      </Input>
+                    )}
                   />
                   <FormErrorMessage>{errors.yearsInLineOfWork?.message}</FormErrorMessage>
                 </FormControl>
@@ -220,7 +251,16 @@ export const EmploymentInfoPage: React.FC = () => {
                   <Controller
                     name="monthsInLineOfWork"
                     control={control}
-                    render={({ field }) => <Input {...field} />}
+                    render={({ field }) => (
+                      <Input as="select" {...field} value={field.value ?? ""}>
+                        <option value="">Months</option>
+                        {Array.from({ length: 12 }, (_, i) => (
+                          <option key={i} value={i.toString()}>
+                            {i}
+                          </option>
+                        ))}
+                      </Input>
+                    )}
                   />
                   <FormErrorMessage>{errors.monthsInLineOfWork?.message}</FormErrorMessage>
                 </FormControl>

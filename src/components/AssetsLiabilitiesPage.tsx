@@ -115,7 +115,7 @@ const getErrorMessage = (err: any) => {
 
 export const AssetsLiabilitiesPage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateAssetsLiabilities } = useLoanApp();
+  const { data, updateAssetsLiabilities } = useLoanApp();
 
   const [hideOtherAssets, setHideOtherAssets] = useState(false);
   const [hideLiabilities, setHideLiabilities] = useState(false);
@@ -133,6 +133,7 @@ export const AssetsLiabilitiesPage: React.FC = () => {
       otherAssets: [],
       liabilities: [],
       otherLiabilities: [],
+      ...data.assetsLiabilities, // ✅ merge saved data
     },
   });
 
@@ -580,17 +581,26 @@ export const AssetsLiabilitiesPage: React.FC = () => {
                 >
                   Back
                 </Button>
-                <Button
-                  colorScheme="brand"
-                  variant="solid"
-                  type="submit"
-                  isDisabled={
-                    !isValid ||
-                    assetsAccounts.fields.length === 0
-                  }
-                >
-                  Continue
-                </Button>
+               <Button
+                colorScheme="brand"
+                variant="solid"
+                type="submit"
+                isDisabled={
+                  !isValid ||
+                  assetsAccounts.fields.length === 0 ||
+                  (
+                    !hideOtherAssets && otherAssets.fields.length === 0
+                  ) ||
+                  (
+                    !hideLiabilities && liabilities.fields.length === 0
+                  ) ||
+                  (
+                    !hideOtherLiabilities && otherLiabilities.fields.length === 0
+                  )
+                }
+              >
+                Continue
+              </Button>
               </Flex>
             </VStack>
           </Box>

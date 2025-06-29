@@ -19,6 +19,7 @@ interface PersonalInfo {
   residencyYears?: string;
   residencyMonths?: string;
   housingType?: string;
+  monthlyPayment?: string;
   previousAddress?: string;
 }
 

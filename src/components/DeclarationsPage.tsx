@@ -41,33 +41,34 @@ const schema = yup.object({
 
 export const DeclarationsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateDeclarations } = useLoanApp();
+  const { data, updateDeclarations } = useLoanApp();
 
   const {
-    handleSubmit,
-    control,
-    watch,
-    formState: { errors, isValid },
-  } = useForm({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-    defaultValues: {
-      occupyAsPrimary: "",
-      ownedPropertyLast3Years: "",
-      typeOfProperty: "",
-      titleHeld: "",
-      relationshipWithSeller: "",
-      borrowingMoney: "",
-      borrowingMoneyAmount: "",
-      mortgageOnOtherProperty: "",
-      obligatedOnLoan: "",
-      cosigner: "",
-      borrowedDownPayment: "",
-      declaredForeclosure: "",
-      declaredBankruptcy: "",
-      bankruptcyTypes: [],
-    },
-  });
+  handleSubmit,
+  control,
+  watch,
+  formState: { errors, isValid },
+} = useForm({
+  resolver: yupResolver(schema),
+  mode: "onChange",
+  defaultValues: {
+    occupyAsPrimary: "",
+    ownedPropertyLast3Years: "",
+    typeOfProperty: "",
+    titleHeld: "",
+    relationshipWithSeller: "",
+    borrowingMoney: "",
+    borrowingMoneyAmount: "",
+    mortgageOnOtherProperty: "",
+    obligatedOnLoan: "",
+    cosigner: "",
+    borrowedDownPayment: "",
+    declaredForeclosure: "",
+    declaredBankruptcy: "",
+    bankruptcyTypes: [],
+    ...data.declarations, // ✅ prefill from context
+  },
+});
 
   const watchBorrowingMoney = watch("borrowingMoney");
   const watchDeclaredBankruptcy = watch("declaredBankruptcy");

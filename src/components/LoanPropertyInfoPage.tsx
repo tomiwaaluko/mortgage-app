@@ -95,7 +95,7 @@ const getErrorMessage = (err: any) => {
 
 export const LoanPropertyInfoPage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateLoanProperty } = useLoanApp();
+  const { data, updateLoanProperty } = useLoanApp();
 
   const {
     handleSubmit,
@@ -116,7 +116,8 @@ export const LoanPropertyInfoPage: React.FC = () => {
       giftDeposited: "",
       giftSource: "",
       giftValue: "",
-        },
+      ...data.loanProperty, // ✅ merge existing data
+    },
   });
 
   const underContract = watch("underContract");

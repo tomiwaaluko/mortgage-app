@@ -26,10 +26,10 @@ import { NumericFormat } from "react-number-format";
 const schema = yup.object({
   fullName: yup.string().required("Name is required"),
   ssn: yup
-  .string()
-  .required("SSN is required")
-  .matches(/^\d+$/, "SSN must contain only numbers")
-  .length(9, "SSN must be exactly 9 digits"),
+    .string()
+    .required("SSN is required")
+    .matches(/^\d+$/, "SSN must contain only numbers")
+    .length(9, "SSN must be exactly 9 digits"),
   dob: yup.string().required("Date of birth is required"),
   citizenship: yup.string().required("Citizenship status is required"),
   maritalStatus: yup.string().required("Marital status is required"),
@@ -42,21 +42,21 @@ const schema = yup.object({
   residencyYears: yup.string().required("Years is required"),
   residencyMonths: yup.string().required("Months is required"),
   housingType: yup.string().required("Housing type is required"),
-  monthlyPayment: yup.string().when(["housingType"], ([housingType], schema) =>
-    housingType === "Own" || housingType === "Rent"
-      ? schema.required("Monthly payment is required")
-      : schema
-  ),
-  previousAddress: yup.string().when(["residencyYears"], ([years], schema) =>
-    years === "0" || years === "1"
-      ? schema.required("Previous address is required")
-      : schema
-  ),
+  monthlyPayment: yup.string().when("housingType", {
+    is: (val: string) => val === "Own" || val === "Rent",
+    then: (schema) => schema.required("Monthly payment is required"),
+    otherwise: (schema) => schema.notRequired().nullable(),
+  }),
+  previousAddress: yup.string().when("residencyYears", {
+    is: (val: string) => val === "0" || val === "1",
+    then: (schema) => schema.required("Previous address is required"),
+    otherwise: (schema) => schema.notRequired().nullable(),
+  }),
 });
 
 export const PersonalInfoPage: React.FC = () => {
   const navigate = useNavigate();
-  const { updatePersonalInfo } = useLoanApp();
+  const { data, updatePersonalInfo } = useLoanApp();
 
   const {
     handleSubmit,
@@ -66,10 +66,29 @@ export const PersonalInfoPage: React.FC = () => {
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: {
+      fullName: "",
+      ssn: "",
+      dob: "",
+      citizenship: "",
+      maritalStatus: "",
+      phone: "",
+      email: "",
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+      residencyYears: "",
+      residencyMonths: "",
+      housingType: "",
+      monthlyPayment: "",
+      previousAddress: "",
+      ...data.personalInfo, // prefill saved data
+    },
   });
 
-  const onSubmit = (data: any) => {
-    updatePersonalInfo(data);
+  const onSubmit = (values: any) => {
+    updatePersonalInfo(values);
     navigate("/employment-info");
   };
 
@@ -78,14 +97,7 @@ export const PersonalInfoPage: React.FC = () => {
 
   return (
     <AnimatedPage>
-      <Flex
-        direction="column"
-        minH="100vh"
-        align="center"
-        bg="white"
-        px={4}
-        py={6}
-      >
+      <Flex direction="column" minH="100vh" align="center" bg="white" px={4} py={6}>
         <VStack spacing={4} maxW="600px" w="100%">
           <Heading as="h2" size="lg" textAlign="center">
             Personal Information
@@ -96,6 +108,7 @@ export const PersonalInfoPage: React.FC = () => {
 
           <Box w="100%" as="form" onSubmit={handleSubmit(onSubmit)}>
             <VStack spacing={4}>
+
               {/* Full Name */}
               <FormControl isInvalid={!!errors.fullName}>
                 <FormLabel>Full Name</FormLabel>
@@ -118,7 +131,7 @@ export const PersonalInfoPage: React.FC = () => {
                 <FormErrorMessage>{errors.ssn?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Date of Birth */}
+              {/* DOB */}
               <FormControl isInvalid={!!errors.dob}>
                 <FormLabel>Date of Birth</FormLabel>
                 <Controller
@@ -229,7 +242,7 @@ export const PersonalInfoPage: React.FC = () => {
                 <FormErrorMessage>{errors.zip?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* How long have you lived here? */}
+              {/* Residency */}
               <FormControl>
                 <FormLabel>How long have you lived here?</FormLabel>
                 <Flex gap={2}>
@@ -239,7 +252,9 @@ export const PersonalInfoPage: React.FC = () => {
                     render={({ field }) => (
                       <Select {...field} placeholder="Years">
                         {Array.from({ length: 31 }, (_, i) => (
-                          <option key={i} value={i.toString()}>{i}</option>
+                          <option key={i} value={i.toString()}>
+                            {i}
+                          </option>
                         ))}
                       </Select>
                     )}
@@ -250,7 +265,9 @@ export const PersonalInfoPage: React.FC = () => {
                     render={({ field }) => (
                       <Select {...field} placeholder="Months">
                         {Array.from({ length: 12 }, (_, i) => (
-                          <option key={i} value={i.toString()}>{i}</option>
+                          <option key={i} value={i.toString()}>
+                            {i}
+                          </option>
                         ))}
                       </Select>
                     )}
@@ -258,7 +275,7 @@ export const PersonalInfoPage: React.FC = () => {
                 </Flex>
               </FormControl>
 
-              {(residencyYears === "0" || residencyYears === "1") && (
+              {["0", "1"].includes(residencyYears) && (
                 <FormControl isInvalid={!!errors.previousAddress}>
                   <FormLabel>Previous Address</FormLabel>
                   <Controller
@@ -270,7 +287,7 @@ export const PersonalInfoPage: React.FC = () => {
                 </FormControl>
               )}
 
-              {/* Housing Type */}
+              {/* Housing */}
               <FormControl isInvalid={!!errors.housingType}>
                 <FormLabel>Type of Housing</FormLabel>
                 <Controller
@@ -280,14 +297,15 @@ export const PersonalInfoPage: React.FC = () => {
                     <Select {...field} placeholder="Select type">
                       <option value="Own">Own</option>
                       <option value="Rent">Rent</option>
-                      <option value="No primary housing expense">No primary housing expense</option>
+                      <option value="No primary housing expense">
+                        No primary housing expense
+                      </option>
                     </Select>
                   )}
                 />
                 <FormErrorMessage>{errors.housingType?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Monthly Payment */}
               {(housingType === "Own" || housingType === "Rent") && (
                 <FormControl isInvalid={!!errors.monthlyPayment}>
                   <FormLabel>How much do you pay monthly?</FormLabel>
@@ -306,7 +324,7 @@ export const PersonalInfoPage: React.FC = () => {
                         onValueChange={(values) => {
                           field.onChange(values.value);
                         }}
-                        value={field.value}
+                        value={field.value || ""}
                       />
                     )}
                   />
@@ -316,19 +334,10 @@ export const PersonalInfoPage: React.FC = () => {
             </VStack>
 
             <Flex justify="space-between" mt={8}>
-              <Button
-                colorScheme="brand"
-                variant="solid"
-                onClick={() => navigate(-1)}
-              >
+              <Button colorScheme="brand" variant="solid" onClick={() => navigate(-1)}>
                 Back
               </Button>
-              <Button
-                colorScheme="brand"
-                variant="solid"
-                type="submit"
-                isDisabled={!isValid}
-              >
+              <Button colorScheme="brand" type="submit" isDisabled={!isValid}>
                 Continue
               </Button>
             </Flex>
