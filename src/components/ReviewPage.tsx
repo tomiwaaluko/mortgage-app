@@ -23,9 +23,7 @@ import emailjs from "@emailjs/browser";
 
 const DataRow: React.FC<{ label: string; value: any }> = ({ label, value }) => (
   <Flex justify="space-between" py={1} borderBottom="1px solid #EDF2F7">
-    <Text fontWeight="medium" color="gray.700">
-      {label}
-    </Text>
+    <Text fontWeight="medium" color="gray.700">{label}</Text>
     <Text color="gray.800">{String(value)}</Text>
   </Flex>
 );
@@ -45,25 +43,25 @@ export const ReviewPage: React.FC = () => {
   };
 
   const handleFinalSubmit = async () => {
-    setIsSending(true);
+  setIsSending(true);
 
-    // Map recipient to email address
-    const emailMap: Record<string, string> = {
-      "Luis Alban": "lalban@pmfmortgage.com",
-      "Joshua Goff": "jgoff@pmfmortgage.com",
-      "Andy Hall": "ahall@pmfmortgage.com",
-    };
+  const emailMap: Record<string, string> = {
+    "Luis Alban": "lalban@pmfmortgage.com",
+    "Joshua Goff": "jgoff@pmfmortgage.com",
+    "Andy Hall": "ahall@pmfmortgage.com",
+  };
 
-    const recipientEmail = emailMap[recipient];
+  const recipientEmail = emailMap[recipient];
 
-    try {
-      await emailjs.send(
-        "PMF Lake Mary",
-        "template_sqtn2kq",
-        {
-          to_name: recipient,
+  try {
+    await emailjs.send(
+      "PMF Lake Mary",
+      "template_sqtn2kq",
+      {
+        to_name: recipient,
         to_email: recipientEmail,
 
+        // 1. Personal Info
         personal_fullName: data.personalInfo.fullName,
         personal_ssn: data.personalInfo.ssn,
         personal_dob: data.personalInfo.dob,
@@ -76,44 +74,81 @@ export const ReviewPage: React.FC = () => {
         personal_state: data.personalInfo.state,
         personal_zip: data.personalInfo.zip,
 
+        // 2. Employment Info
         employment_employerName: data.employmentInfo.employerName,
         employment_position: data.employmentInfo.position,
         employment_startDate: data.employmentInfo.startDate,
         employment_yearsInLineOfWork: data.employmentInfo.yearsInLineOfWork,
         employment_monthlyIncomeBase: data.employmentInfo.monthlyIncomeBase,
 
-        assets_summary: JSON.stringify(data.assetsLiabilities, null, 2),
-        realEstate_summary: JSON.stringify(data.realEstate, null, 2),
-        loanProperty_summary: JSON.stringify(data.loanProperty, null, 2),
-        declarations_summary: JSON.stringify(data.declarations, null, 2),
-        },
-        "AZ8_cULXf034K-faR"
-      );
+        // 3. Assets & Liabilities
+        assets_accounts: JSON.stringify(data.assetsLiabilities.assetsAccounts, null, 2),
+        assets_otherAssets: JSON.stringify(data.assetsLiabilities.otherAssets, null, 2),
+        assets_liabilities: JSON.stringify(data.assetsLiabilities.liabilities, null, 2),
+        assets_otherLiabilities: JSON.stringify(data.assetsLiabilities.otherLiabilities, null, 2),
 
-      toast({
-        title: "Application sent.",
-        description: `Successfully sent to ${recipient}.`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+        // 4. Real Estate
+        realEstate_ownsRealEstate: data.realEstate.ownsRealEstate,
+        realEstate_properties: (data.realEstate.properties ?? [])
+          .map(
+            (p: any, i: number) =>
+              `Property ${i + 1}:\nAddress: ${p.address}\nValue: ${p.value}\nStatus: ${p.status}\nOccupancy: ${p.occupancy}\nMonthly Payment: ${p.monthlyPayment}\nRental Income: ${p.rentalIncome}`
+          )
+          .join("\n\n"),
 
-      setIsDialogOpen(false);
-      // Optionally navigate to thank you
-      // navigate("/");
-    } catch (error) {
-      console.error("Error sending email:", error);
-      toast({
-        title: "Error",
-        description: "There was an issue sending the application.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsSending(false);
-    }
-  };
+        // 5. Loan Property
+        loan_underContract: data.loanProperty.underContract,
+        loan_salesPrice: data.loanProperty.salesPrice,
+        loan_downPayment: data.loanProperty.downPayment,
+        loan_propertyAddress: data.loanProperty.propertyAddress,
+        loan_occupancy: data.loanProperty.occupancy,
+        loan_receivingGift: data.loanProperty.receivingGift,
+        loan_giftAssetType: data.loanProperty.giftAssetType,
+        loan_giftDeposited: data.loanProperty.giftDeposited,
+        loan_giftSource: data.loanProperty.giftSource,
+        loan_giftValue: data.loanProperty.giftValue,
+
+        // 6. Declarations
+        declarations_occupyAsPrimary: data.declarations.occupyAsPrimary,
+        declarations_ownedPropertyLast3Years: data.declarations.ownedPropertyLast3Years,
+        declarations_typeOfProperty: data.declarations.typeOfProperty,
+        declarations_titleHeld: data.declarations.titleHeld,
+        declarations_relationshipWithSeller: data.declarations.relationshipWithSeller,
+        declarations_borrowingMoney: data.declarations.borrowingMoney,
+        declarations_borrowingMoneyAmount: data.declarations.borrowingMoneyAmount,
+        declarations_mortgageOnOtherProperty: data.declarations.mortgageOnOtherProperty,
+        declarations_obligatedOnLoan: data.declarations.obligatedOnLoan,
+        declarations_cosigner: data.declarations.cosigner,
+        declarations_borrowedDownPayment: data.declarations.borrowedDownPayment,
+        declarations_declaredForeclosure: data.declarations.declaredForeclosure,
+        declarations_declaredBankruptcy: data.declarations.declaredBankruptcy,
+        declarations_bankruptcyTypes: (data.declarations.bankruptcyTypes || []).join(", "),
+      },
+      "AZ8_cULXf034K-faR"
+    );
+
+    toast({
+      title: "Application sent.",
+      description: `Successfully sent to ${recipient}.`,
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+
+    setIsDialogOpen(false);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    toast({
+      title: "Error",
+      description: "There was an issue sending the application.",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+  } finally {
+    setIsSending(false);
+  }
+};
 
   return (
     <AnimatedPage>
@@ -158,7 +193,6 @@ export const ReviewPage: React.FC = () => {
         </VStack>
       </Flex>
 
-      {/* Modal */}
       <AlertDialog
         isOpen={isDialogOpen}
         leastDestructiveRef={cancelRef}
