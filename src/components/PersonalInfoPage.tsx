@@ -25,11 +25,11 @@ import { NumericFormat } from "react-number-format";
 
 const schema = yup.object({
   fullName: yup.string().required("Name is required"),
-  ssn: yup
-    .string()
-    .required("SSN is required")
-    .matches(/^\d+$/, "SSN must contain only numbers")
-    .length(9, "SSN must be exactly 9 digits"),
+  // ssn: yup
+  //   .string()
+  //   .required("SSN is required")
+  //   .matches(/^\d+$/, "SSN must contain only numbers")
+  //   .length(9, "SSN must be exactly 9 digits"),
   dob: yup.string().required("Date of birth is required"),
   citizenship: yup.string().required("Citizenship status is required"),
   maritalStatus: yup.string().required("Marital status is required"),
@@ -68,7 +68,7 @@ export const PersonalInfoPage: React.FC = () => {
     mode: "onChange",
     defaultValues: {
       fullName: "",
-      ssn: "",
+      // ssn: "",
       dob: "",
       citizenship: "",
       maritalStatus: "",
@@ -97,7 +97,14 @@ export const PersonalInfoPage: React.FC = () => {
 
   return (
     <AnimatedPage>
-      <Flex direction="column" minH="100vh" align="center" bg="white" px={4} py={6}>
+      <Flex
+        direction="column"
+        minH="100vh"
+        align="center"
+        bg="white"
+        px={4}
+        py={6}
+      >
         <VStack spacing={4} maxW="600px" w="100%">
           <Heading as="h2" size="lg" textAlign="center">
             Personal Information
@@ -108,7 +115,6 @@ export const PersonalInfoPage: React.FC = () => {
 
           <Box w="100%" as="form" onSubmit={handleSubmit(onSubmit)}>
             <VStack spacing={4}>
-
               {/* Full Name */}
               <FormControl isInvalid={!!errors.fullName}>
                 <FormLabel>Full Name</FormLabel>
@@ -121,7 +127,7 @@ export const PersonalInfoPage: React.FC = () => {
               </FormControl>
 
               {/* SSN */}
-              <FormControl isInvalid={!!errors.ssn}>
+              {/* <FormControl isInvalid={!!errors.ssn}>
                 <FormLabel>Social Security Number</FormLabel>
                 <Controller
                   name="ssn"
@@ -129,7 +135,7 @@ export const PersonalInfoPage: React.FC = () => {
                   render={({ field }) => <Input {...field} />}
                 />
                 <FormErrorMessage>{errors.ssn?.message}</FormErrorMessage>
-              </FormControl>
+              </FormControl> */}
 
               {/* DOB */}
               <FormControl isInvalid={!!errors.dob}>
@@ -152,13 +158,19 @@ export const PersonalInfoPage: React.FC = () => {
                     <RadioGroup {...field}>
                       <Stack direction="column">
                         <Radio value="US Citizen">US Citizen</Radio>
-                        <Radio value="Permanent Resident Alien">Permanent Resident Alien</Radio>
-                        <Radio value="Non-Permanent Resident Alien">Non-Permanent Resident Alien</Radio>
+                        <Radio value="Permanent Resident Alien">
+                          Permanent Resident Alien
+                        </Radio>
+                        <Radio value="Non-Permanent Resident Alien">
+                          Non-Permanent Resident Alien
+                        </Radio>
                       </Stack>
                     </RadioGroup>
                   )}
                 />
-                <FormErrorMessage>{errors.citizenship?.message}</FormErrorMessage>
+                <FormErrorMessage>
+                  {errors.citizenship?.message}
+                </FormErrorMessage>
               </FormControl>
 
               {/* Marital Status */}
@@ -176,7 +188,9 @@ export const PersonalInfoPage: React.FC = () => {
                     </Select>
                   )}
                 />
-                <FormErrorMessage>{errors.maritalStatus?.message}</FormErrorMessage>
+                <FormErrorMessage>
+                  {errors.maritalStatus?.message}
+                </FormErrorMessage>
               </FormControl>
 
               {/* Phone */}
@@ -283,7 +297,9 @@ export const PersonalInfoPage: React.FC = () => {
                     control={control}
                     render={({ field }) => <Input {...field} />}
                   />
-                  <FormErrorMessage>{errors.previousAddress?.message}</FormErrorMessage>
+                  <FormErrorMessage>
+                    {errors.previousAddress?.message}
+                  </FormErrorMessage>
                 </FormControl>
               )}
 
@@ -303,7 +319,9 @@ export const PersonalInfoPage: React.FC = () => {
                     </Select>
                   )}
                 />
-                <FormErrorMessage>{errors.housingType?.message}</FormErrorMessage>
+                <FormErrorMessage>
+                  {errors.housingType?.message}
+                </FormErrorMessage>
               </FormControl>
 
               {(housingType === "Own" || housingType === "Rent") && (
@@ -328,13 +346,19 @@ export const PersonalInfoPage: React.FC = () => {
                       />
                     )}
                   />
-                  <FormErrorMessage>{errors.monthlyPayment?.message}</FormErrorMessage>
+                  <FormErrorMessage>
+                    {errors.monthlyPayment?.message}
+                  </FormErrorMessage>
                 </FormControl>
               )}
             </VStack>
 
             <Flex justify="space-between" mt={8}>
-              <Button colorScheme="brand" variant="solid" onClick={() => navigate(-1)}>
+              <Button
+                colorScheme="brand"
+                variant="solid"
+                onClick={() => navigate(-1)}
+              >
                 Back
               </Button>
               <Button colorScheme="brand" type="submit" isDisabled={!isValid}>

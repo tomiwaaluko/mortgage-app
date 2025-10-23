@@ -60,7 +60,7 @@ export const WelcomePage: React.FC = () => {
                   py={1}
                   borderRadius="full"
                 >
-                  ⚡ Get Pre-Qualified in 5 Minutes
+                  ⚡ Free Pre-Qualification in 5 Minutes
                 </Badge>
                 <Heading
                   as="h1"
@@ -68,12 +68,12 @@ export const WelcomePage: React.FC = () => {
                   fontWeight="bold"
                   lineHeight="1.2"
                 >
-                  Your Dream Home Starts Here
+                  Your Dream Home is Closer Than You Think
                 </Heading>
                 <Text fontSize={{ base: "lg", md: "xl" }} opacity={0.95}>
-                  Pioneer Mortgage Funding makes home buying simple, fast, and
-                  stress-free. Join thousands of Florida families who found
-                  their perfect home with us.
+                  Get pre-qualified in minutes with Florida's most trusted
+                  mortgage lender. No impact to your credit score. No hidden
+                  fees. Just honest answers.
                 </Text>
                 <HStack
                   spacing={4}
@@ -108,7 +108,8 @@ export const WelcomePage: React.FC = () => {
                   Get Pre-Qualified Now →
                 </Button>
                 <Text fontSize="xs" opacity={0.8}>
-                  ⭐ Trusted by 10,000+ Florida homebuyers • 4.9/5 rating
+                  ✓ Trusted by 10,000+ Florida homebuyers | ⭐ 4.9/5 rating | 🔒
+                  Bank-level security
                 </Text>
               </VStack>
               <Box display={{ base: "none", md: "block" }}>
@@ -172,11 +173,11 @@ export const WelcomePage: React.FC = () => {
           <Container maxW="container.xl">
             <VStack spacing={4} mb={12} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Simple. Fast. Transparent.
+                Get Pre-Qualified in 3 Simple Steps
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                Getting pre-qualified shouldn't be complicated. Here's how we
-                make it easy.
+                No complicated paperwork. No confusing jargon. Just a fast, easy
+                path to your pre-qualification letter.
               </Text>
             </VStack>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
@@ -201,11 +202,11 @@ export const WelcomePage: React.FC = () => {
                   <FaClock />
                 </Box>
                 <Heading as="h3" fontSize="xl">
-                  1. Quick Application
+                  1. Tell Us About You
                 </Heading>
                 <Text textAlign="center" color="gray.600">
-                  Fill out our simple 5-minute form. No lengthy paperwork or
-                  confusing jargon.
+                  Answer a few quick questions about your income, assets, and
+                  dream home. Takes just 5 minutes.
                 </Text>
               </VStack>
               <VStack
@@ -229,11 +230,11 @@ export const WelcomePage: React.FC = () => {
                   <FaChartLine />
                 </Box>
                 <Heading as="h3" fontSize="xl">
-                  2. Instant Results
+                  2. See Your Options
                 </Heading>
                 <Text textAlign="center" color="gray.600">
-                  Get your pre-qualification amount immediately. See what you
-                  can afford right away.
+                  Get your personalized pre-qualification amount and explore
+                  loan options tailored for you.
                 </Text>
               </VStack>
               <VStack
@@ -257,11 +258,11 @@ export const WelcomePage: React.FC = () => {
                   <FaHandshake />
                 </Box>
                 <Heading as="h3" fontSize="xl">
-                  3. Expert Guidance
+                  3. Connect With an Expert
                 </Heading>
                 <Text textAlign="center" color="gray.600">
-                  Connect with a dedicated loan officer who'll guide you every
-                  step of the way.
+                  Speak with a local Florida loan officer who will guide you
+                  from pre-qualification to closing.
                 </Text>
               </VStack>
             </SimpleGrid>
@@ -273,11 +274,11 @@ export const WelcomePage: React.FC = () => {
           <Container maxW="container.xl">
             <VStack spacing={4} mb={12} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Why Choose Pioneer Mortgage Funding?
+                Why 10,000+ Floridians Choose PMF
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                We're not just another lender. We're your partner in making
-                homeownership a reality.
+                We're more than a lender—we're your partner in achieving the
+                American Dream.
               </Text>
             </VStack>
             <Grid
@@ -296,11 +297,11 @@ export const WelcomePage: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    Secure & Confidential
+                    Your Privacy is Sacred
                   </Heading>
                   <Text color="gray.600">
-                    Your information is protected with bank-level 256-bit
-                    encryption. We never sell your data.
+                    Bank-level 256-bit encryption protects your data. We never
+                    sell your information. Ever.
                   </Text>
                 </Box>
               </HStack>
@@ -316,11 +317,11 @@ export const WelcomePage: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    Best Rates Guaranteed
+                    Lowest Rates, Guaranteed
                   </Heading>
                   <Text color="gray.600">
-                    Access exclusive rates and programs. We shop multiple
-                    lenders to find your best deal.
+                    We compare offers from 50+ lenders to ensure you get the
+                    absolute best rate available.
                   </Text>
                 </Box>
               </HStack>
@@ -336,11 +337,11 @@ export const WelcomePage: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    Local Florida Experts
+                    Florida Market Experts
                   </Heading>
                   <Text color="gray.600">
-                    Our team knows Florida's housing market inside and out. Get
-                    personalized local advice.
+                    Born and raised in Florida. We know every neighborhood,
+                    school district, and market trend.
                   </Text>
                 </Box>
               </HStack>
@@ -356,11 +357,11 @@ export const WelcomePage: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    Award-Winning Service
+                    White-Glove Service
                   </Heading>
                   <Text color="gray.600">
-                    Rated #1 in customer satisfaction. Real people, real
-                    support, whenever you need it.
+                    Rated #1 for customer care. Your dedicated loan officer
+                    answers calls, texts, and emails 7 days a week.
                   </Text>
                 </Box>
               </HStack>
@@ -373,11 +374,11 @@ export const WelcomePage: React.FC = () => {
           <Container maxW="container.xl">
             <VStack spacing={4} mb={12} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Stories From Our Happy Homeowners
+                Real Stories From Real Homeowners
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                Don't just take our word for it. Here's what Florida families
-                are saying.
+                Don't just take our word for it. Here's what your future
+                neighbors are saying.
               </Text>
             </VStack>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
@@ -397,8 +398,9 @@ export const WelcomePage: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "PMF made our first home purchase so easy! They answered every
-                  question and got us the best rate. Highly recommend!"
+                  "As first-time buyers, we were terrified. PMF made everything
+                  so simple. Our loan officer answered every question, no matter
+                  how small. We closed in 3 weeks!"
                 </Text>
                 <Text fontWeight="bold">Sarah & Mike Johnson</Text>
                 <Text fontSize="sm" color="gray.500">
@@ -421,8 +423,9 @@ export const WelcomePage: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "The team was professional and responsive. We closed in 3
-                  weeks! They truly care about their clients."
+                  "I refinanced with PMF and saved $400/month. The process was
+                  seamless, and they beat every other lender's rate. Can't
+                  recommend them enough!"
                 </Text>
                 <Text fontWeight="bold">Maria Rodriguez</Text>
                 <Text fontSize="sm" color="gray.500">
@@ -445,8 +448,9 @@ export const WelcomePage: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "Stress-free experience from start to finish. They found us a
-                  rate lower than we expected. Forever grateful!"
+                  "After being rejected by two banks, PMF found a program that
+                  worked for us. They fought for our approval and we're now in
+                  our dream home!"
                 </Text>
                 <Text fontWeight="bold">David & Lisa Chen</Text>
                 <Text fontSize="sm" color="gray.500">
@@ -467,12 +471,12 @@ export const WelcomePage: React.FC = () => {
           <Container maxW="container.md">
             <VStack spacing={6} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Ready to Start Your Journey?
+                Ready to Take the Next Step?
               </Heading>
               <Text fontSize={{ base: "lg", md: "xl" }} opacity={0.95}>
-                Join thousands of Florida families who've found their dream home
-                with Pioneer Mortgage Funding. Your pre-qualification is just 5
-                minutes away.
+                Join 10,000+ Florida families who trusted PMF to make their
+                homeownership dreams a reality. Start your free
+                pre-qualification now—no obligation, no credit check.
               </Text>
               <Button
                 size="lg"
@@ -486,7 +490,7 @@ export const WelcomePage: React.FC = () => {
                 transition="all 0.2s"
                 onClick={() => navigate("/personal-info")}
               >
-                Get Pre-Qualified Now →
+                Get My Free Pre-Qualification →
               </Button>
               <VStack spacing={2} mt={4}>
                 <HStack spacing={6} flexWrap="wrap" justify="center">
