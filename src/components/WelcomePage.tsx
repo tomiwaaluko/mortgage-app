@@ -81,8 +81,8 @@ export const WelcomePage: React.FC = () => {
                   justify={{ base: "center", md: "flex-start" }}
                 >
                   <HStack>
-                    <FaCheckCircle />
-                    <Text fontSize="sm">No SSN Required</Text>
+                    <FaShieldAlt />
+                    <Text fontSize="sm">Secure & Private</Text>
                   </HStack>
                   <HStack>
                     <FaCheckCircle />
@@ -107,10 +107,10 @@ export const WelcomePage: React.FC = () => {
                 >
                   Get Pre-Qualified Now →
                 </Button>
-                <Text fontSize="xs" opacity={0.8}>
+                {/* <Text fontSize="xs" opacity={0.8}>
                   ✓ Trusted by 10,000+ Florida homebuyers | ⭐ 4.9/5 rating | 🔒
                   Bank-level security
-                </Text>
+                </Text> */}
               </VStack>
               <Box display={{ base: "none", md: "block" }}>
                 <Image
@@ -134,7 +134,7 @@ export const WelcomePage: React.FC = () => {
             >
               <VStack>
                 <Text fontSize="3xl" fontWeight="bold" color="brand.600">
-                  $2.5B+
+                  $2.5M+
                 </Text>
                 <Text fontSize="sm" color="gray.600">
                   Loans Funded
@@ -158,7 +158,7 @@ export const WelcomePage: React.FC = () => {
               </VStack>
               <VStack>
                 <Text fontSize="3xl" fontWeight="bold" color="brand.600">
-                  24hr
+                  &gt;24hr
                 </Text>
                 <Text fontSize="sm" color="gray.600">
                   Avg. Response Time
@@ -495,8 +495,8 @@ export const WelcomePage: React.FC = () => {
               <VStack spacing={2} mt={4}>
                 <HStack spacing={6} flexWrap="wrap" justify="center">
                   <HStack>
-                    <FaCheckCircle />
-                    <Text fontSize="sm">No SSN Required</Text>
+                    <FaShieldAlt />
+                    <Text fontSize="sm">Bank‑grade encryption</Text>
                   </HStack>
                   <HStack>
                     <FaCheckCircle />

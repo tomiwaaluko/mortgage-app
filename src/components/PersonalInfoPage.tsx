@@ -101,33 +101,78 @@ export const PersonalInfoPage: React.FC = () => {
         direction="column"
         minH="100vh"
         align="center"
-        bg="white"
+        bgGradient="linear(to-br, gray.50, blue.50)"
         px={4}
-        py={6}
+        py={12}
       >
-        <VStack spacing={4} maxW="600px" w="100%">
-          <Heading as="h2" size="lg" textAlign="center">
-            Personal Information
-          </Heading>
-          <Text textAlign="center" color="gray.600">
-            Please complete all fields to continue.
-          </Text>
+        <VStack spacing={6} maxW="900px" w="100%">
+          {/* Progress Indicator */}
+          <Box w="100%" textAlign="center" mb={2}>
+            <Text fontSize="sm" color="brand.600" fontWeight="semibold" mb={1}>
+              STEP 1 OF 7
+            </Text>
+            <Box
+              w="100%"
+              h="2px"
+              bg="gray.200"
+              borderRadius="full"
+              position="relative"
+            >
+              <Box w="14%" h="100%" bg="brand.500" borderRadius="full" />
+            </Box>
+          </Box>
 
-          <Box w="100%" as="form" onSubmit={handleSubmit(onSubmit)}>
-            <VStack spacing={4}>
-              {/* Full Name */}
-              <FormControl isInvalid={!!errors.fullName}>
-                <FormLabel>Full Name</FormLabel>
-                <Controller
-                  name="fullName"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-                <FormErrorMessage>{errors.fullName?.message}</FormErrorMessage>
-              </FormControl>
+          <Box
+            bg="white"
+            borderRadius="2xl"
+            boxShadow="2xl"
+            p={{ base: 6, md: 10 }}
+            w="100%"
+          >
+            <VStack spacing={2} mb={8}>
+              <Heading
+                as="h2"
+                size="xl"
+                textAlign="center"
+                bgGradient="linear(to-r, brand.500, brand.700)"
+                bgClip="text"
+              >
+                Personal Information
+              </Heading>
+              <Text textAlign="center" color="gray.600" fontSize="lg">
+                Let's start with some basic information about you
+              </Text>
+            </VStack>
 
-              {/* SSN */}
-              {/* <FormControl isInvalid={!!errors.ssn}>
+            <Box w="100%" as="form" onSubmit={handleSubmit(onSubmit)}>
+              <VStack spacing={6}>
+                {/* Full Name */}
+                <FormControl isInvalid={!!errors.fullName}>
+                  <FormLabel fontWeight="semibold" color="gray.700">
+                    Full Legal Name
+                  </FormLabel>
+                  <Controller
+                    name="fullName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        size="lg"
+                        borderRadius="lg"
+                        _focus={{
+                          borderColor: "brand.500",
+                          boxShadow: "0 0 0 1px #2196f3",
+                        }}
+                      />
+                    )}
+                  />
+                  <FormErrorMessage>
+                    {errors.fullName?.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                {/* SSN */}
+                {/* <FormControl isInvalid={!!errors.ssn}>
                 <FormLabel>Social Security Number</FormLabel>
                 <Controller
                   name="ssn"
@@ -137,234 +182,438 @@ export const PersonalInfoPage: React.FC = () => {
                 <FormErrorMessage>{errors.ssn?.message}</FormErrorMessage>
               </FormControl> */}
 
-              {/* DOB */}
-              <FormControl isInvalid={!!errors.dob}>
-                <FormLabel>Date of Birth</FormLabel>
-                <Controller
-                  name="dob"
-                  control={control}
-                  render={({ field }) => <Input type="date" {...field} />}
-                />
-                <FormErrorMessage>{errors.dob?.message}</FormErrorMessage>
-              </FormControl>
-
-              {/* Citizenship */}
-              <FormControl isInvalid={!!errors.citizenship}>
-                <FormLabel>Citizenship Status</FormLabel>
-                <Controller
-                  name="citizenship"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup {...field}>
-                      <Stack direction="column">
-                        <Radio value="US Citizen">US Citizen</Radio>
-                        <Radio value="Permanent Resident Alien">
-                          Permanent Resident Alien
-                        </Radio>
-                        <Radio value="Non-Permanent Resident Alien">
-                          Non-Permanent Resident Alien
-                        </Radio>
-                      </Stack>
-                    </RadioGroup>
-                  )}
-                />
-                <FormErrorMessage>
-                  {errors.citizenship?.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              {/* Marital Status */}
-              <FormControl isInvalid={!!errors.maritalStatus}>
-                <FormLabel>Marital Status</FormLabel>
-                <Controller
-                  name="maritalStatus"
-                  control={control}
-                  render={({ field }) => (
-                    <Select {...field} placeholder="Select status">
-                      <option value="Single">Single</option>
-                      <option value="Married">Married</option>
-                      <option value="Divorced">Divorced</option>
-                      <option value="Widowed">Widowed</option>
-                    </Select>
-                  )}
-                />
-                <FormErrorMessage>
-                  {errors.maritalStatus?.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              {/* Phone */}
-              <FormControl isInvalid={!!errors.phone}>
-                <FormLabel>Phone Number</FormLabel>
-                <Controller
-                  name="phone"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-                <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
-              </FormControl>
-
-              {/* Email */}
-              <FormControl isInvalid={!!errors.email}>
-                <FormLabel>Email Address</FormLabel>
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-                <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-              </FormControl>
-
-              {/* Address */}
-              <FormControl isInvalid={!!errors.street}>
-                <FormLabel>Street Address</FormLabel>
-                <Controller
-                  name="street"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-                <FormErrorMessage>{errors.street?.message}</FormErrorMessage>
-              </FormControl>
-
-              <FormControl isInvalid={!!errors.city}>
-                <FormLabel>City</FormLabel>
-                <Controller
-                  name="city"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-                <FormErrorMessage>{errors.city?.message}</FormErrorMessage>
-              </FormControl>
-
-              <FormControl isInvalid={!!errors.state}>
-                <FormLabel>State</FormLabel>
-                <Controller
-                  name="state"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-                <FormErrorMessage>{errors.state?.message}</FormErrorMessage>
-              </FormControl>
-
-              <FormControl isInvalid={!!errors.zip}>
-                <FormLabel>Zip Code</FormLabel>
-                <Controller
-                  name="zip"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-                <FormErrorMessage>{errors.zip?.message}</FormErrorMessage>
-              </FormControl>
-
-              {/* Residency */}
-              <FormControl>
-                <FormLabel>How long have you lived here?</FormLabel>
-                <Flex gap={2}>
+                {/* DOB */}
+                <FormControl isInvalid={!!errors.dob}>
+                  <FormLabel fontWeight="semibold" color="gray.700">
+                    Date of Birth
+                  </FormLabel>
                   <Controller
-                    name="residencyYears"
+                    name="dob"
                     control={control}
                     render={({ field }) => (
-                      <Select {...field} placeholder="Years">
-                        {Array.from({ length: 31 }, (_, i) => (
-                          <option key={i} value={i.toString()}>
-                            {i}
-                          </option>
-                        ))}
-                      </Select>
-                    )}
-                  />
-                  <Controller
-                    name="residencyMonths"
-                    control={control}
-                    render={({ field }) => (
-                      <Select {...field} placeholder="Months">
-                        {Array.from({ length: 12 }, (_, i) => (
-                          <option key={i} value={i.toString()}>
-                            {i}
-                          </option>
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </Flex>
-              </FormControl>
-
-              {["0", "1"].includes(residencyYears) && (
-                <FormControl isInvalid={!!errors.previousAddress}>
-                  <FormLabel>Previous Address</FormLabel>
-                  <Controller
-                    name="previousAddress"
-                    control={control}
-                    render={({ field }) => <Input {...field} />}
-                  />
-                  <FormErrorMessage>
-                    {errors.previousAddress?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-
-              {/* Housing */}
-              <FormControl isInvalid={!!errors.housingType}>
-                <FormLabel>Type of Housing</FormLabel>
-                <Controller
-                  name="housingType"
-                  control={control}
-                  render={({ field }) => (
-                    <Select {...field} placeholder="Select type">
-                      <option value="Own">Own</option>
-                      <option value="Rent">Rent</option>
-                      <option value="No primary housing expense">
-                        No primary housing expense
-                      </option>
-                    </Select>
-                  )}
-                />
-                <FormErrorMessage>
-                  {errors.housingType?.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              {(housingType === "Own" || housingType === "Rent") && (
-                <FormControl isInvalid={!!errors.monthlyPayment}>
-                  <FormLabel>How much do you pay monthly?</FormLabel>
-                  <Controller
-                    name="monthlyPayment"
-                    control={control}
-                    render={({ field }) => (
-                      <NumericFormat
+                      <Input
+                        type="date"
                         {...field}
-                        thousandSeparator
-                        prefix="$"
-                        allowNegative={false}
-                        decimalScale={2}
-                        fixedDecimalScale
-                        customInput={Input}
-                        onValueChange={(values) => {
-                          field.onChange(values.value);
+                        size="lg"
+                        borderRadius="lg"
+                        _focus={{
+                          borderColor: "brand.500",
+                          boxShadow: "0 0 0 1px #2196f3",
                         }}
-                        value={field.value || ""}
                       />
                     )}
                   />
+                  <FormErrorMessage>{errors.dob?.message}</FormErrorMessage>
+                </FormControl>
+
+                {/* Citizenship */}
+                <FormControl isInvalid={!!errors.citizenship}>
+                  <FormLabel fontWeight="semibold" color="gray.700">
+                    Citizenship Status
+                  </FormLabel>
+                  <Controller
+                    name="citizenship"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup {...field}>
+                        <Stack direction="column" spacing={3}>
+                          <Radio
+                            value="US Citizen"
+                            size="lg"
+                            colorScheme="brand"
+                            borderColor="gray.300"
+                          >
+                            <Text ml={2}>US Citizen</Text>
+                          </Radio>
+                          <Radio
+                            value="Permanent Resident Alien"
+                            size="lg"
+                            colorScheme="brand"
+                            borderColor="gray.300"
+                          >
+                            <Text ml={2}>Permanent Resident Alien</Text>
+                          </Radio>
+                          <Radio
+                            value="Non-Permanent Resident Alien"
+                            size="lg"
+                            colorScheme="brand"
+                            borderColor="gray.300"
+                          >
+                            <Text ml={2}>Non-Permanent Resident Alien</Text>
+                          </Radio>
+                        </Stack>
+                      </RadioGroup>
+                    )}
+                  />
                   <FormErrorMessage>
-                    {errors.monthlyPayment?.message}
+                    {errors.citizenship?.message}
                   </FormErrorMessage>
                 </FormControl>
-              )}
-            </VStack>
 
-            <Flex justify="space-between" mt={8}>
-              <Button
-                colorScheme="brand"
-                variant="solid"
-                onClick={() => navigate(-1)}
-              >
-                Back
-              </Button>
-              <Button colorScheme="brand" type="submit" isDisabled={!isValid}>
-                Continue
-              </Button>
-            </Flex>
+                {/* Marital Status */}
+                <FormControl isInvalid={!!errors.maritalStatus}>
+                  <FormLabel fontWeight="semibold" color="gray.700">
+                    Marital Status
+                  </FormLabel>
+                  <Controller
+                    name="maritalStatus"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        placeholder="Select status"
+                        size="lg"
+                        borderRadius="lg"
+                        _focus={{
+                          borderColor: "brand.500",
+                          boxShadow: "0 0 0 1px #2196f3",
+                        }}
+                      >
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Widowed">Widowed</option>
+                      </Select>
+                    )}
+                  />
+                  <FormErrorMessage>
+                    {errors.maritalStatus?.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                {/* Phone & Email in 2 columns on desktop */}
+                <Flex
+                  gap={4}
+                  w="100%"
+                  direction={{ base: "column", md: "row" }}
+                >
+                  <FormControl isInvalid={!!errors.phone} flex={1}>
+                    <FormLabel fontWeight="semibold" color="gray.700">
+                      Phone Number
+                    </FormLabel>
+                    <Controller
+                      name="phone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.email} flex={1}>
+                    <FormLabel fontWeight="semibold" color="gray.700">
+                      Email Address
+                    </FormLabel>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+                  </FormControl>
+                </Flex>
+
+                {/* Current Address Section Header */}
+                <Box w="100%" pt={4}>
+                  <Heading size="md" color="brand.600" mb={4}>
+                    Current Address
+                  </Heading>
+                </Box>
+                {/* Street Address */}
+                <FormControl isInvalid={!!errors.street}>
+                  <FormLabel fontWeight="semibold" color="gray.700">
+                    Street Address
+                  </FormLabel>
+                  <Controller
+                    name="street"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        size="lg"
+                        borderRadius="lg"
+                        _focus={{
+                          borderColor: "brand.500",
+                          boxShadow: "0 0 0 1px #2196f3",
+                        }}
+                      />
+                    )}
+                  />
+                  <FormErrorMessage>{errors.street?.message}</FormErrorMessage>
+                </FormControl>
+
+                {/* City, State, Zip in responsive grid */}
+                <Flex
+                  gap={4}
+                  w="100%"
+                  direction={{ base: "column", md: "row" }}
+                >
+                  <FormControl isInvalid={!!errors.city} flex={2}>
+                    <FormLabel fontWeight="semibold" color="gray.700">
+                      City
+                    </FormLabel>
+                    <Controller
+                      name="city"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>{errors.city?.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.state} flex={1}>
+                    <FormLabel fontWeight="semibold" color="gray.700">
+                      State
+                    </FormLabel>
+                    <Controller
+                      name="state"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>{errors.state?.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.zip} flex={1}>
+                    <FormLabel fontWeight="semibold" color="gray.700">
+                      Zip Code
+                    </FormLabel>
+                    <Controller
+                      name="zip"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>{errors.zip?.message}</FormErrorMessage>
+                  </FormControl>
+                </Flex>
+
+                {/* Residency */}
+                <FormControl>
+                  <FormLabel fontWeight="semibold" color="gray.700">
+                    How long have you lived here?
+                  </FormLabel>
+                  <Flex gap={4}>
+                    <Controller
+                      name="residencyYears"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          placeholder="Years"
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        >
+                          {Array.from({ length: 31 }, (_, i) => (
+                            <option key={i} value={i.toString()}>
+                              {i}
+                            </option>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                    <Controller
+                      name="residencyMonths"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          placeholder="Months"
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        >
+                          {Array.from({ length: 12 }, (_, i) => (
+                            <option key={i} value={i.toString()}>
+                              {i}
+                            </option>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </Flex>
+                </FormControl>
+
+                {["0", "1"].includes(residencyYears) && (
+                  <FormControl isInvalid={!!errors.previousAddress}>
+                    <FormLabel fontWeight="semibold" color="gray.700">
+                      Previous Address
+                    </FormLabel>
+                    <Controller
+                      name="previousAddress"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>
+                      {errors.previousAddress?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+
+                {/* Housing Section Header */}
+                <Box w="100%" pt={4}>
+                  <Heading size="md" color="brand.600" mb={4}>
+                    Housing Information
+                  </Heading>
+                </Box>
+
+                {/* Housing */}
+                <FormControl isInvalid={!!errors.housingType}>
+                  <FormLabel fontWeight="semibold" color="gray.700">
+                    Type of Housing
+                  </FormLabel>
+                  <Controller
+                    name="housingType"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        placeholder="Select type"
+                        size="lg"
+                        borderRadius="lg"
+                        _focus={{
+                          borderColor: "brand.500",
+                          boxShadow: "0 0 0 1px #2196f3",
+                        }}
+                      >
+                        <option value="Own">Own</option>
+                        <option value="Rent">Rent</option>
+                        <option value="No primary housing expense">
+                          No primary housing expense
+                        </option>
+                      </Select>
+                    )}
+                  />
+                  <FormErrorMessage>
+                    {errors.housingType?.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                {(housingType === "Own" || housingType === "Rent") && (
+                  <FormControl isInvalid={!!errors.monthlyPayment}>
+                    <FormLabel fontWeight="semibold" color="gray.700">
+                      How much do you pay monthly?
+                    </FormLabel>
+                    <Controller
+                      name="monthlyPayment"
+                      control={control}
+                      render={({ field }) => (
+                        <NumericFormat
+                          {...field}
+                          thousandSeparator
+                          prefix="$"
+                          allowNegative={false}
+                          decimalScale={2}
+                          fixedDecimalScale
+                          customInput={Input}
+                          size="lg"
+                          borderRadius="lg"
+                          _focus={{
+                            borderColor: "brand.500",
+                            boxShadow: "0 0 0 1px #2196f3",
+                          }}
+                          onValueChange={(values) => {
+                            field.onChange(values.value);
+                          }}
+                          value={field.value || ""}
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>
+                      {errors.monthlyPayment?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+              </VStack>
+
+              <Flex justify="space-between" mt={10} gap={4}>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  colorScheme="brand"
+                  onClick={() => navigate(-1)}
+                  borderRadius="lg"
+                  px={8}
+                >
+                  Back
+                </Button>
+                <Button
+                  size="lg"
+                  colorScheme="brand"
+                  type="submit"
+                  isDisabled={!isValid}
+                  borderRadius="lg"
+                  px={8}
+                  boxShadow="lg"
+                  _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
+                >
+                  Continue →
+                </Button>
+              </Flex>
+            </Box>
           </Box>
         </VStack>
       </Flex>
