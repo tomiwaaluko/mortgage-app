@@ -527,11 +527,11 @@ export const WelcomePage: React.FC = () => {
             >
               <Box>
                 <Heading as="h5" fontSize="lg" mb={3}>
-                  Pioneer Mortgage Funding
+                  APEX Residential Finance
                 </Heading>
                 <Text fontSize="sm" opacity={0.8}>
-                  Making homeownership dreams come true across Florida since
-                  2010.
+                  Making homeownership dreams come true across Florida since who
+                  knows whens.
                 </Text>
               </Box>
               <Box>
@@ -565,10 +565,10 @@ export const WelcomePage: React.FC = () => {
                   spacing={2}
                 >
                   <Text fontSize="sm" opacity={0.8}>
-                    📞 (555) 123-4567
+                    📞 123-456-7890
                   </Text>
                   <Text fontSize="sm" opacity={0.8}>
-                    📧 info@pmf.com
+                    📧 apex@homes.com
                   </Text>
                   <Text fontSize="sm" opacity={0.8}>
                     📍 Florida
@@ -578,7 +578,7 @@ export const WelcomePage: React.FC = () => {
             </SimpleGrid>
             <Divider my={6} opacity={0.2} />
             <Text textAlign="center" fontSize="xs" opacity={0.6}>
-              © 2025 Pioneer Mortgage Funding. All rights reserved. NMLS #123456
+              © 2025 APEX Residential Finance. All rights reserved. NMLS #123456
             </Text>
           </Container>
         </Box>

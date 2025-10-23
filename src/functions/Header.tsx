@@ -28,7 +28,9 @@ export const Header: React.FC = () => {
 
   const currentIndex = steps.indexOf(location.pathname);
   const progressPercent =
-    currentIndex >= 0 ? Math.round(((currentIndex + 1) / steps.length) * 100) : 0;
+    currentIndex >= 0
+      ? Math.round(((currentIndex + 1) / steps.length) * 100)
+      : 0;
 
   return (
     <Box>
@@ -47,16 +49,17 @@ export const Header: React.FC = () => {
       >
         {/* Logo */}
         <Image
-          src="/pmf-logo.png"
+          src="/image-1.png"
           alt="Logo"
-          h="40px"
+          h="60px"
+          w="90px"
           cursor="pointer"
           onClick={() => navigate("/")}
         />
 
         {/* Center Text */}
         <Text fontSize="lg" fontWeight="medium" color="blue.600">
-          PMF Home Loan Application
+          APEX Home Loan Application
         </Text>
 
         {/* Contact */}
@@ -68,7 +71,7 @@ export const Header: React.FC = () => {
           colorScheme="blue"
           size="sm"
         >
-          (407) 272-2538
+          (123) 456-7890
         </Button>
       </Flex>
 
