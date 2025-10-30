@@ -52,13 +52,18 @@ export const Header: React.FC = () => {
           src="/image-1.png"
           alt="Logo"
           h="60px"
-          w="90px"
+          w="120px"
           cursor="pointer"
           onClick={() => navigate("/")}
         />
 
         {/* Center Text */}
-        <Text fontSize="lg" fontWeight="medium" color="blue.600">
+        <Text 
+          display={{ base: "none", md: "block" }}
+          fontSize="lg"
+          fontWeight="medium"
+          color="blue.600"
+        >
           APEX Home Loan Application
         </Text>
 

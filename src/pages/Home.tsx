@@ -59,6 +59,7 @@ export const Home: React.FC = () => {
                   px={3}
                   py={1}
                   borderRadius="full"
+                  justifyContent="center"
                 >
                   ⚡ Free Pre-Qualification in 5 Minutes
                 </Badge>
@@ -158,7 +159,7 @@ export const Home: React.FC = () => {
               </VStack>
               <VStack>
                 <Text fontSize="3xl" fontWeight="bold" color="brand.600">
-                  &gt;24hr
+                  &lt;24hr
                 </Text>
                 <Text fontSize="sm" color="gray.600">
                   Avg. Response Time
@@ -257,7 +258,7 @@ export const Home: React.FC = () => {
                 >
                   <FaHandshake />
                 </Box>
-                <Heading as="h3" fontSize="xl">
+                <Heading as="h3" fontSize="xl" textAlign="center">
                   3. Connect With an Expert
                 </Heading>
                 <Text textAlign="center" color="gray.600">
@@ -483,6 +484,7 @@ export const Home: React.FC = () => {
                 colorScheme="green"
                 px={12}
                 py={7}
+                width="16.5em"
                 fontSize="xl"
                 borderRadius="full"
                 boxShadow="2xl"
