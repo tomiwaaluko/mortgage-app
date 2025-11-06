@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 
+// TODO: fix up login functionality
+
 export default function SignIn() {
     const navigate = useNavigate();
 

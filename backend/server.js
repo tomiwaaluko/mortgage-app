@@ -1,10 +1,28 @@
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const helmet = require("helmet");
 
 dotenv.config();
+
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+app.use(helmet());
+
+app.use(
+    cors({
+        origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+        credentials: true,
+    })
+);
+
+app.set("trust proxy", 1);
+const prod = process.env.NODE_ENV === "production";
 
 const client = new MongoClient(process.env.MONGO_URL, {
     serverApi: {
@@ -14,27 +32,148 @@ const client = new MongoClient(process.env.MONGO_URL, {
     }
 });
 
+let db;
+
 async function run() {
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
+    db = client.db(process.env.DB_NAME || "app");
+    console.log("You successfully connected to MongoDB!");
+}
+
+run().catch((err) => {
+    console.error("Mongo initialization error:", err);
+    process.exit(1);
+});
+
+app.use((req, _res, next) => {
+    req.db = db;
+    next();
+});
+
+const ACCESS_TTL = "15m";
+const REFRESH_TTL = "7d";
+const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+function signAccessToken(payload) {
+    return jwt.sign(payload, ACCESS_SECRET, { expiresIn: ACCESS_TTL });
+}
+
+function signRefreshToken(payload) {
+    return jwt.sign(payload, REFRESH_SECRET, { expiresIn: REFRESH_TTL });
+}
+
+function auth(req, res, next) {
+    const hdr = req.headers.authorization || "";
+    const [, token] = hdr.split(" ");
+
+    if (!token)
+        return res.status(401).json({ error: "Missing token" });
+
     try {
-        await client.connect();
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        await client.close();
+        const decoded = jwt.verify(token, ACCESS_SECRET);
+        req.user = decoded;
+        next();
+    } catch (e) {
+        return res.status(401).json({ error: "Invalid/expired token" });
     }
 }
 
-run().catch(console.dir);
-
-app.get("/api/ping", async (req, res) => {
+app.get("/api/ping", async (_req, res) => {
     try {
-        res.status(200).json({ message: "Pong!" });
+        await db.admin().command({ ping: 1 });
+        res.status(200).json({ message: "Pong!", db: "ok" });
     } catch (err) {
         console.error("Error while trying to ping: ", err);
         res.status(500).json({ error: "Internal server error" });
     }
 });
 
-app.listen(3001, () => {
-    console.log(`Server started at ${3001}!`);
+app.post("/api/auth/signup", async (req, res) => {
+    try {
+        const {
+            firstName,
+            lastName,
+            email,
+            password
+        } = req.body || {};
+
+        if (!firstName || !lastName) return res.status(400).json({ error: "Missing first or last name" });
+        if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+
+        const Users = req.db.collection("Users");
+        const existing = await Users.findOne({ email });
+
+        if (existing) {
+            return res.status(409).json({ error: "Email already in use!" });
+        }
+
+        const passwordHash = await bcrypt.hash(password, 12);
+        const { insertedId } = await Users.insertOne({
+            email,
+            passwordHash,
+            createdAt: new Date(),
+        });
+
+        const accessToken = signAccessToken({ sub: insertedId.toString(), email });
+        const refreshToken = signRefreshToken({ sub: insertedId.toString() });
+
+        await Users.updateOne({ _id: insertedId }, { $set: { refreshToken } });
+
+        res.cookie("rt", refreshToken, {
+            httpOnly: true,
+            secure: prod,
+            sameSite: prod ? "lax" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: "/api/auth",
+        });
+
+        res.json({ ok: true, user: { id: insertedId, email }, accessToken});
+    } catch (e) {
+        console.error("Signup error:", e);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.post("/api/auth/login", async (req, res) => {
+    try {
+        const { email, password } = req.body || {};
+        if (!email || !password)
+            return res.status(400).json({ error: "Missing email or password!" });
+
+        const Users = req.db.collection("Users");
+        const user = await Users.findOne({ email });
+
+        if (!user)
+            return res.status(401).json({ error: "Invalid credentials" });
+
+        const ok = await bcrypt.compare(password, user.passwordHash);
+        if (!ok)
+            return res.status(401).json({ error: "Invalid credentials" });
+
+        const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email });
+        const refreshToken = signRefreshToken({ sub: user._id.toString() });
+
+        await Users.updateOne({ _id: user._id }, { $set: { refreshToken } });
+
+        res.cookie("rt", refreshToken, {
+        httpOnly: true,
+        secure: prod,
+        sameSite: prod ? "lax" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: "/api/auth",
+        });
+
+        res.json({ ok: true, user: { id: user._id, email: user.email }, accessToken });
+    } catch (e) {
+        console.error("Login error:", e);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server started at ${PORT}!`);
 });
