@@ -7,6 +7,8 @@ import { AssetsLiabilities } from "./pages/AssetsLiabilities";
 import { RealEstateInfo } from "./pages/RealEstateInfo";
 import { LoanPropertyInfo } from "./pages/LoanPropertyInfo";
 import { Review } from "./pages/Review";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import { Layout } from "./ui/Layout";
 import { ScrollToTop } from "./ui/ScrollToTop";
 import { Declarations } from "./pages/Declarations";
@@ -24,6 +26,22 @@ function App() {
             element={
               <Layout>
                 <Home />
+              </Layout>
+            }
+          />
+          <Route
+            path="sign-in"
+            element={
+              <Layout>
+                <SignIn />
+              </Layout>
+            }
+          />
+          <Route
+            path="sign-up"
+            element={
+              <Layout>
+                <SignUp />
               </Layout>
             }
           />

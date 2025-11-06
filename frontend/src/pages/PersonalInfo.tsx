@@ -25,11 +25,6 @@ import { NumericFormat } from "react-number-format";
 
 const schema = yup.object({
   fullName: yup.string().required("Name is required"),
-  ssn: yup
-    .string()
-    .required("SSN is required")
-    .matches(/^\d+$/, "SSN must contain only numbers")
-    .length(9, "SSN must be exactly 9 digits"),
   dob: yup.string().required("Date of birth is required"),
   citizenship: yup.string().required("Citizenship status is required"),
   maritalStatus: yup.string().required("Marital status is required"),
@@ -68,7 +63,6 @@ export const PersonalInfo: React.FC = () => {
     mode: "onChange",
     defaultValues: {
       fullName: "",
-      ssn: "",
       dob: "",
       citizenship: "",
       maritalStatus: "",
@@ -169,45 +163,6 @@ export const PersonalInfo: React.FC = () => {
                   <FormErrorMessage>
                     {errors.fullName?.message}
                   </FormErrorMessage>
-                </FormControl>
-
-                {/* SSN */}
-                <FormControl isInvalid={!!errors.ssn}>
-                  <FormLabel fontWeight="semibold" color="gray.700">
-                    Social Security Number
-                  </FormLabel>
-                  <Controller
-                    name="ssn"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        value={field.value || ""}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, "");
-                          if (value.length <= 9) {
-                            field.onChange(value);
-                          }
-                        }}
-                        onBlur={field.onBlur}
-                        size="lg"
-                        borderRadius="lg"
-                        _focus={{
-                          borderColor: "brand.500",
-                          boxShadow: "0 0 0 1px #2196f3",
-                        }}
-                        placeholder="###-##-####"
-                        type="password"
-                        inputMode="numeric"
-                        css={{
-                          "&::placeholder": {
-                            WebkitTextSecurity: "none !important",
-                            textSecurity: "none !important",
-                          },
-                        }}
-                      />
-                    )}
-                  />
-                  <FormErrorMessage>{errors.ssn?.message}</FormErrorMessage>
                 </FormControl>
 
                 {/* DOB */}

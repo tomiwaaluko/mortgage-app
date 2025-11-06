@@ -46,9 +46,7 @@ export const Review: React.FC = () => {
   setIsSending(true);
 
   const emailMap: Record<string, string> = {
-    "Luis Alban": "lalban@pmfmortgage.com",
-    "Joshua Goff": "jgoff@pmfmortgage.com",
-    "Andy Hall": "ahall@pmfmortgage.com",
+    "Mustaeen Ahmed": "contact@mustaeen.dev",
   };
 
   const recipientEmail = emailMap[recipient];
