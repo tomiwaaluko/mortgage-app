@@ -93,7 +93,7 @@ export default function SignUp() {
             }
 
             toast({
-                title: "Sign up failed",
+                title: "Sign Up failed",
                 description: e?.message || "Please try again.",
                 status: "error",
                 duration: 4000,

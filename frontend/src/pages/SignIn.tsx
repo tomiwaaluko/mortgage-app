@@ -10,19 +10,24 @@ import {
     InputGroup,
     InputRightElement,
     IconButton,
+    useToast,
     VStack
 } from "@chakra-ui/react";
 import { AnimatedPage } from "../ui/AnimatedPage";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import { useState } from "react";
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 
-// TODO: fix up login functionality
+import { signIn } from "../lib/api";
 
 export default function SignIn() {
     const navigate = useNavigate();
-
+    const toast = useToast();
     const [toggle, setToggle] = useState<boolean>(false);
 
     return (
@@ -37,6 +42,17 @@ export default function SignIn() {
                     <Heading mb={"3"}>
                         Sign-In
                     </Heading>
+
+                    <Box as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
+                        <VStack spacing={5} align="stretch" w="full">
+                            <FormControl isRequired>
+
+                            </FormControl>
+                            <FormControl>
+
+                            </FormControl>
+                        </VStack>
+                    </Box>
                     <FormControl isRequired>
                         <VStack spacing={5} align="stretch" w="full">
                             <Box>
