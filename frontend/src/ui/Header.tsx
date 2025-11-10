@@ -58,7 +58,7 @@ export const Header: React.FC = () => {
         />
 
         {/* Center Text */}
-        <Text 
+        <Text
           display={{ base: "none", md: "block" }}
           fontSize="lg"
           fontWeight="medium"
@@ -67,17 +67,26 @@ export const Header: React.FC = () => {
           APEX Home Loan Application
         </Text>
 
-        {/* Contact */}
-        <Button
-          as="a"
-          href="tel:+14075551234"
-          leftIcon={<PhoneIcon />}
-          variant="outline"
-          colorScheme="blue"
-          size="sm"
-        >
-          (123) 456-7890
-        </Button>
+        {/* Contact and Sign In */}
+        <HStack spacing={2}>
+          <Button
+            as="a"
+            href="tel:+14075551234"
+            leftIcon={<PhoneIcon />}
+            variant="outline"
+            colorScheme="blue"
+            size="sm"
+          >
+            (123) 456-7890
+          </Button>
+          <Button
+            onClick={() => navigate("/sign-in")}
+            colorScheme="blue"
+            size="sm"
+          >
+            Sign In
+          </Button>
+        </HStack>
       </Flex>
 
       {/* Progress Bar and Step Text */}

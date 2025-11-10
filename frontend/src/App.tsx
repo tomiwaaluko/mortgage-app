@@ -9,6 +9,7 @@ import { LoanPropertyInfo } from "./pages/LoanPropertyInfo";
 import { Review } from "./pages/Review";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import { AuthPrompt } from "./pages/AuthPrompt";
 import { Layout } from "./ui/Layout";
 import { ScrollToTop } from "./ui/ScrollToTop";
 import { Declarations } from "./pages/Declarations";
@@ -26,6 +27,14 @@ function App() {
             element={
               <Layout>
                 <Home />
+              </Layout>
+            }
+          />
+          <Route
+            path="/auth-prompt"
+            element={
+              <Layout>
+                <AuthPrompt />
               </Layout>
             }
           />

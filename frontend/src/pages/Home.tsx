@@ -104,7 +104,7 @@ export const Home: React.FC = () => {
                   boxShadow="2xl"
                   _hover={{ transform: "translateY(-2px)", boxShadow: "3xl" }}
                   transition="all 0.2s"
-                  onClick={() => navigate("/personal-info")}
+                  onClick={() => navigate("/auth-prompt")}
                 >
                   Get Pre-Qualified Now →
                 </Button>
@@ -490,7 +490,7 @@ export const Home: React.FC = () => {
                 boxShadow="2xl"
                 _hover={{ transform: "translateY(-2px)", boxShadow: "3xl" }}
                 transition="all 0.2s"
-                onClick={() => navigate("/personal-info")}
+                onClick={() => navigate("/auth-prompt")}
               >
                 Get My Free Pre-Qualification →
               </Button>
