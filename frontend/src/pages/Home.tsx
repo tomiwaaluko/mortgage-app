@@ -190,9 +190,9 @@ export const Home: React.FC = () => {
                 Your Dream Home is in the Ring
               </Heading>
               <Text fontSize={{ base: "lg", md: "xl" }}>
-                Get pre-qualified in minutes with Olympus's most elite
-                mortgage squad. No impact to your credit score. No hidden
-                fees. Just legendary service.
+                Get pre-qualified in minutes with Olympus's most elite mortgage
+                squad. No impact to your credit score. No hidden fees. Just
+                legendary service.
               </Text>
               <HStack
                 spacing={4}
@@ -282,8 +282,8 @@ export const Home: React.FC = () => {
                 Drop, Loot, and Secure in 3 Simple Steps
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                No complicated loadout. No third-party interference. Just a fast, tactical
-                path to your pre-qualification letter.
+                No complicated loadout. No third-party interference. Just a
+                fast, tactical path to your pre-qualification letter.
               </Text>
             </VStack>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
@@ -311,8 +311,8 @@ export const Home: React.FC = () => {
                   1. Ping Your Intel
                 </Heading>
                 <Text textAlign="center" color="gray.600">
-                  Share your financial loadout, assets, and 
-                  target property. Quick scan takes just 5 minutes.
+                  Share your financial loadout, assets, and target property.
+                  Quick scan takes just 5 minutes.
                 </Text>
               </VStack>
               <VStack
@@ -406,8 +406,8 @@ export const Home: React.FC = () => {
                     Gold-Tier Security Protocol
                   </Heading>
                   <Text color="gray.600">
-                    Military-grade 256-bit encryption shields your data. We never
-                    sell your information to third parties. Ever.
+                    Military-grade 256-bit encryption shields your data. We
+                    never sell your information to third parties. Ever.
                   </Text>
                 </Box>
               </HStack>
@@ -426,7 +426,8 @@ export const Home: React.FC = () => {
                     Legendary Rates, Guaranteed
                   </Heading>
                   <Text color="gray.600">
-                    We scout 50+ lenders to secure you the absolute best rate in the arena.
+                    We scout 50+ lenders to secure you the absolute best rate in
+                    the arena.
                   </Text>
                 </Box>
               </HStack>
@@ -445,7 +446,8 @@ export const Home: React.FC = () => {
                     Olympus Hot Zone Specialists
                   </Heading>
                   <Text color="gray.600">
-                    Local experts who know every drop zone, school district, and high-tier market location.
+                    Local experts who know every drop zone, school district, and
+                    high-tier market location.
                   </Text>
                 </Box>
               </HStack>
@@ -481,7 +483,8 @@ export const Home: React.FC = () => {
                 Victory Stories From Our Squad
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                Don't just take our word for it. Here's what champion homeowners are saying.
+                Don't just take our word for it. Here's what champion homeowners
+                are saying.
               </Text>
             </VStack>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
@@ -501,8 +504,9 @@ export const Home: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "As rookies, we were nervous. APEX made it clutch. Our loan officer
-                  had our backs every step. We secured the W in 3 weeks!"
+                  "As rookies, we were nervous. APEX made it clutch. Our loan
+                  officer had our backs every step. We secured the W in 3
+                  weeks!"
                 </Text>
                 <Text fontWeight="bold">Sarah & Mike Johnson</Text>
                 <Text fontSize="sm" color="gray.500">
@@ -525,8 +529,9 @@ export const Home: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "I respawned my mortgage with APEX and saved $400/month. The execution was
-                  flawless, and they dominated every other lender's rate. MVP performance!"
+                  "I respawned my mortgage with APEX and saved $400/month. The
+                  execution was flawless, and they dominated every other
+                  lender's rate. MVP performance!"
                 </Text>
                 <Text fontWeight="bold">Maria Rodriguez</Text>
                 <Text fontSize="sm" color="gray.500">
@@ -549,8 +554,9 @@ export const Home: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "After getting knocked by two banks, APEX clutched up with a perfect loadout.
-                  They fought for our approval and we claimed victory in our dream home!"
+                  "After getting knocked by two banks, APEX clutched up with a
+                  perfect loadout. They fought for our approval and we claimed
+                  victory in our dream home!"
                 </Text>
                 <Text fontWeight="bold">David & Lisa Chen</Text>
                 <Text fontSize="sm" color="gray.500">
