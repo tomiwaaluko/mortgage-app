@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -13,6 +13,7 @@ import {
   Link,
   Badge,
   Divider,
+  IconButton,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { AnimatedPage } from "../ui/AnimatedPage";
@@ -25,103 +26,207 @@ import {
   FaChartLine,
   FaUserTie,
   FaAward,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
+
+const heroImages = [
+  { src: "/home1.jpg", alt: "Beautiful modern home" },
+  { src: "/home2.avif", alt: "Elegant family residence" },
+  { src: "/home3.webp", alt: "Cozy suburban house" },
+  { src: "/home4.webp", alt: "Contemporary dream home" },
+  { src: "/home5.webp", alt: "Charming property" },
+];
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Auto-advance carousel every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex(
+      (prev) => (prev - 1 + heroImages.length) % heroImages.length
+    );
+  };
 
   return (
     <AnimatedPage>
       <Box bg="white">
-        {/* Hero Section */}
+        {/* Hero Section with Carousel */}
         <Box
-          bgGradient="linear(to-br, brand.500, brand.700)"
-          color="white"
-          py={{ base: 16, md: 24 }}
-          px={4}
           position="relative"
           overflow="hidden"
+          h={{ base: "auto", md: "700px" }}
         >
-          <Container maxW="container.xl">
-            <Grid
-              templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-              gap={8}
-              alignItems="center"
+          {/* Background Image Carousel */}
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            zIndex={0}
+          >
+            {heroImages.map((img, index) => (
+              <Image
+                key={index}
+                src={img.src}
+                alt={img.alt}
+                position="absolute"
+                top={0}
+                left={0}
+                w="100%"
+                h="100%"
+                objectFit="cover"
+                opacity={currentImageIndex === index ? 1 : 0}
+                transition="opacity 1s ease-in-out"
+              />
+            ))}
+            {/* Dark overlay for text readability */}
+            <Box
+              position="absolute"
+              top={0}
+              left={0}
+              right={0}
+              bottom={0}
+              bg="blackAlpha.600"
+            />
+          </Box>
+
+          {/* Carousel Controls */}
+          <IconButton
+            aria-label="Previous image"
+            icon={<FaChevronLeft />}
+            position="absolute"
+            left={4}
+            top="50%"
+            transform="translateY(-50%)"
+            zIndex={2}
+            onClick={prevImage}
+            colorScheme="whiteAlpha"
+            size="lg"
+            display={{ base: "none", md: "flex" }}
+          />
+          <IconButton
+            aria-label="Next image"
+            icon={<FaChevronRight />}
+            position="absolute"
+            right={4}
+            top="50%"
+            transform="translateY(-50%)"
+            zIndex={2}
+            onClick={nextImage}
+            colorScheme="whiteAlpha"
+            size="lg"
+            display={{ base: "none", md: "flex" }}
+          />
+
+          {/* Carousel Indicators */}
+          <HStack
+            position="absolute"
+            bottom={4}
+            left="50%"
+            transform="translateX(-50%)"
+            zIndex={2}
+            spacing={2}
+          >
+            {heroImages.map((_, index) => (
+              <Box
+                key={index}
+                w={currentImageIndex === index ? "24px" : "8px"}
+                h="8px"
+                bg={currentImageIndex === index ? "white" : "whiteAlpha.500"}
+                borderRadius="full"
+                cursor="pointer"
+                onClick={() => setCurrentImageIndex(index)}
+                transition="all 0.3s"
+              />
+            ))}
+          </HStack>
+
+          {/* Hero Content */}
+          <Container
+            maxW="container.xl"
+            position="relative"
+            zIndex={1}
+            h="100%"
+            display="flex"
+            alignItems="center"
+            py={{ base: 16, md: 0 }}
+          >
+            <VStack
+              align={{ base: "center", md: "flex-start" }}
+              spacing={6}
+              textAlign={{ base: "center", md: "left" }}
+              maxW={{ base: "100%", md: "600px" }}
+              color="white"
             >
-              <VStack
-                align={{ base: "center", md: "flex-start" }}
-                spacing={6}
-                textAlign={{ base: "center", md: "left" }}
+              <Badge
+                colorScheme="green"
+                fontSize="sm"
+                px={3}
+                py={1}
+                borderRadius="full"
               >
-                <Badge
-                  colorScheme="green"
-                  fontSize="sm"
-                  px={3}
-                  py={1}
-                  borderRadius="full"
-                  justifyContent="center"
-                >
-                  ⚡ Free Pre-Qualification in 5 Minutes
-                </Badge>
-                <Heading
-                  as="h1"
-                  fontSize={{ base: "3xl", md: "5xl" }}
-                  fontWeight="bold"
-                  lineHeight="1.2"
-                >
-                  Your Dream Home is Closer Than You Think
-                </Heading>
-                <Text fontSize={{ base: "lg", md: "xl" }} opacity={0.95}>
-                  Get pre-qualified in minutes with Florida's most trusted
-                  mortgage lender. No impact to your credit score. No hidden
-                  fees. Just honest answers.
-                </Text>
-                <HStack
-                  spacing={4}
-                  flexWrap="wrap"
-                  justify={{ base: "center", md: "flex-start" }}
-                >
-                  <HStack>
-                    <FaShieldAlt />
-                    <Text fontSize="sm">Secure & Private</Text>
-                  </HStack>
-                  <HStack>
-                    <FaCheckCircle />
-                    <Text fontSize="sm">No Credit Impact</Text>
-                  </HStack>
-                  <HStack>
-                    <FaCheckCircle />
-                    <Text fontSize="sm">100% Free</Text>
-                  </HStack>
+                ⚡ Free Pre-Qualification in 5 Minutes
+              </Badge>
+              <Heading
+                as="h1"
+                fontSize={{ base: "3xl", md: "5xl" }}
+                fontWeight="bold"
+                lineHeight="1.2"
+              >
+                Your Dream Home is Closer Than You Think
+              </Heading>
+              <Text fontSize={{ base: "lg", md: "xl" }}>
+                Get pre-qualified in minutes with Florida's most trusted
+                mortgage lender. No impact to your credit score. No hidden fees.
+                Just honest answers.
+              </Text>
+              <HStack
+                spacing={4}
+                flexWrap="wrap"
+                justify={{ base: "center", md: "flex-start" }}
+              >
+                <HStack>
+                  <FaShieldAlt />
+                  <Text fontSize="sm">Secure & Private</Text>
                 </HStack>
-                <Button
-                  size="lg"
-                  colorScheme="green"
-                  px={10}
-                  py={7}
-                  fontSize="xl"
-                  borderRadius="full"
-                  boxShadow="2xl"
-                  _hover={{ transform: "translateY(-2px)", boxShadow: "3xl" }}
-                  transition="all 0.2s"
-                  onClick={() => navigate("/auth-prompt")}
-                >
-                  Get Pre-Qualified Now →
-                </Button>
-                {/* <Text fontSize="xs" opacity={0.8}>
-                  ✓ Trusted by 10,000+ Florida homebuyers | ⭐ 4.9/5 rating | 🔒
-                  Bank-level security
-                </Text> */}
-              </VStack>
-              <Box display={{ base: "none", md: "block" }}>
-                <Image
-                  src="/welcome.png"
-                  alt="Happy family in front of their new home"
-                  borderRadius="2xl"
-                  boxShadow="2xl"
-                />
-              </Box>
-            </Grid>
+                <HStack>
+                  <FaCheckCircle />
+                  <Text fontSize="sm">No Credit Impact</Text>
+                </HStack>
+                <HStack>
+                  <FaCheckCircle />
+                  <Text fontSize="sm">100% Free</Text>
+                </HStack>
+              </HStack>
+              <Button
+                size="lg"
+                colorScheme="green"
+                px={10}
+                py={7}
+                fontSize="xl"
+                borderRadius="full"
+                boxShadow="2xl"
+                _hover={{ transform: "translateY(-2px)", boxShadow: "3xl" }}
+                transition="all 0.2s"
+                onClick={() => navigate("/auth-prompt")}
+              >
+                Get Pre-Qualified Now →
+              </Button>
+            </VStack>
           </Container>
         </Box>
 
