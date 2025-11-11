@@ -179,7 +179,7 @@ export const Home: React.FC = () => {
                 py={1}
                 borderRadius="full"
               >
-                ⚡ Free Pre-Qualification in 5 Minutes
+                ⚡ Champions Get Pre-Qualified in 5 Minutes
               </Badge>
               <Heading
                 as="h1"
@@ -187,12 +187,12 @@ export const Home: React.FC = () => {
                 fontWeight="bold"
                 lineHeight="1.2"
               >
-                Your Dream Home is Closer Than You Think
+                Your Dream Home is in the Ring
               </Heading>
               <Text fontSize={{ base: "lg", md: "xl" }}>
-                Get pre-qualified in minutes with Florida's most trusted
-                mortgage lender. No impact to your credit score. No hidden fees.
-                Just honest answers.
+                Get pre-qualified in minutes with Olympus's most elite
+                mortgage squad. No impact to your credit score. No hidden
+                fees. Just legendary service.
               </Text>
               <HStack
                 spacing={4}
@@ -243,7 +243,7 @@ export const Home: React.FC = () => {
                   $2.5M+
                 </Text>
                 <Text fontSize="sm" color="gray.600">
-                  Loans Funded
+                  Total Damage Funded
                 </Text>
               </VStack>
               <VStack>
@@ -251,7 +251,7 @@ export const Home: React.FC = () => {
                   10,000+
                 </Text>
                 <Text fontSize="sm" color="gray.600">
-                  Happy Homeowners
+                  Champions Deployed
                 </Text>
               </VStack>
               <VStack>
@@ -259,7 +259,7 @@ export const Home: React.FC = () => {
                   4.9/5
                 </Text>
                 <Text fontSize="sm" color="gray.600">
-                  Customer Rating
+                  Squad Rating
                 </Text>
               </VStack>
               <VStack>
@@ -267,7 +267,7 @@ export const Home: React.FC = () => {
                   &lt;24hr
                 </Text>
                 <Text fontSize="sm" color="gray.600">
-                  Avg. Response Time
+                  Drop Time Response
                 </Text>
               </VStack>
             </SimpleGrid>
@@ -279,10 +279,10 @@ export const Home: React.FC = () => {
           <Container maxW="container.xl">
             <VStack spacing={4} mb={12} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Get Pre-Qualified in 3 Simple Steps
+                Drop, Loot, and Secure in 3 Simple Steps
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                No complicated paperwork. No confusing jargon. Just a fast, easy
+                No complicated loadout. No third-party interference. Just a fast, tactical
                 path to your pre-qualification letter.
               </Text>
             </VStack>
@@ -308,11 +308,11 @@ export const Home: React.FC = () => {
                   <FaClock />
                 </Box>
                 <Heading as="h3" fontSize="xl">
-                  1. Tell Us About You
+                  1. Ping Your Intel
                 </Heading>
                 <Text textAlign="center" color="gray.600">
-                  Answer a few quick questions about your income, assets, and
-                  dream home. Takes just 5 minutes.
+                  Share your financial loadout, assets, and 
+                  target property. Quick scan takes just 5 minutes.
                 </Text>
               </VStack>
               <VStack
@@ -336,11 +336,11 @@ export const Home: React.FC = () => {
                   <FaChartLine />
                 </Box>
                 <Heading as="h3" fontSize="xl">
-                  2. See Your Options
+                  2. Analyze Your Gear
                 </Heading>
                 <Text textAlign="center" color="gray.600">
-                  Get your personalized pre-qualification amount and explore
-                  loan options tailored for you.
+                  Get your personalized pre-qualification amount with optimized
+                  loan options crafted for your playstyle.
                 </Text>
               </VStack>
               <VStack
@@ -364,11 +364,11 @@ export const Home: React.FC = () => {
                   <FaHandshake />
                 </Box>
                 <Heading as="h3" fontSize="xl" textAlign="center">
-                  3. Connect With an Expert
+                  3. Team Up with a Legend
                 </Heading>
                 <Text textAlign="center" color="gray.600">
-                  Speak with a local Florida loan officer who will guide you
-                  from pre-qualification to closing.
+                  Partner with a local Olympus loan expert who will support you
+                  from drop to victory royale.
                 </Text>
               </VStack>
             </SimpleGrid>
@@ -380,11 +380,11 @@ export const Home: React.FC = () => {
           <Container maxW="container.xl">
             <VStack spacing={4} mb={12} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Why 10,000+ Floridians Choose PMF
+                Why 10,000+ Legends Choose APEX
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                We're more than a lender—we're your partner in achieving the
-                American Dream.
+                We're more than a lender—we're your elite squad in achieving the
+                ultimate victory.
               </Text>
             </VStack>
             <Grid
@@ -403,11 +403,11 @@ export const Home: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    Your Privacy is Sacred
+                    Gold-Tier Security Protocol
                   </Heading>
                   <Text color="gray.600">
-                    Bank-level 256-bit encryption protects your data. We never
-                    sell your information. Ever.
+                    Military-grade 256-bit encryption shields your data. We never
+                    sell your information to third parties. Ever.
                   </Text>
                 </Box>
               </HStack>
@@ -423,11 +423,10 @@ export const Home: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    Lowest Rates, Guaranteed
+                    Legendary Rates, Guaranteed
                   </Heading>
                   <Text color="gray.600">
-                    We compare offers from 50+ lenders to ensure you get the
-                    absolute best rate available.
+                    We scout 50+ lenders to secure you the absolute best rate in the arena.
                   </Text>
                 </Box>
               </HStack>
@@ -443,11 +442,10 @@ export const Home: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    Florida Market Experts
+                    Olympus Hot Zone Specialists
                   </Heading>
                   <Text color="gray.600">
-                    Born and raised in Florida. We know every neighborhood,
-                    school district, and market trend.
+                    Local experts who know every drop zone, school district, and high-tier market location.
                   </Text>
                 </Box>
               </HStack>
@@ -463,11 +461,11 @@ export const Home: React.FC = () => {
                 </Box>
                 <Box>
                   <Heading as="h4" fontSize="lg" mb={2}>
-                    White-Glove Service
+                    Lifeline-Level Support
                   </Heading>
                   <Text color="gray.600">
-                    Rated #1 for customer care. Your dedicated loan officer
-                    answers calls, texts, and emails 7 days a week.
+                    Rated #1 for champion care. Your dedicated loan officer
+                    responds 24/7—because legends never sleep.
                   </Text>
                 </Box>
               </HStack>
@@ -480,11 +478,10 @@ export const Home: React.FC = () => {
           <Container maxW="container.xl">
             <VStack spacing={4} mb={12} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Real Stories From Real Homeowners
+                Victory Stories From Our Squad
               </Heading>
               <Text fontSize="lg" color="gray.600" maxW="2xl">
-                Don't just take our word for it. Here's what your future
-                neighbors are saying.
+                Don't just take our word for it. Here's what champion homeowners are saying.
               </Text>
             </VStack>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
@@ -504,13 +501,12 @@ export const Home: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "As first-time buyers, we were terrified. PMF made everything
-                  so simple. Our loan officer answered every question, no matter
-                  how small. We closed in 3 weeks!"
+                  "As rookies, we were nervous. APEX made it clutch. Our loan officer
+                  had our backs every step. We secured the W in 3 weeks!"
                 </Text>
                 <Text fontWeight="bold">Sarah & Mike Johnson</Text>
                 <Text fontSize="sm" color="gray.500">
-                  Tampa, FL • First-Time Buyers
+                  Hammond Labs • First Drop Buyers
                 </Text>
               </Box>
               <Box
@@ -529,13 +525,12 @@ export const Home: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "I refinanced with PMF and saved $400/month. The process was
-                  seamless, and they beat every other lender's rate. Can't
-                  recommend them enough!"
+                  "I respawned my mortgage with APEX and saved $400/month. The execution was
+                  flawless, and they dominated every other lender's rate. MVP performance!"
                 </Text>
                 <Text fontWeight="bold">Maria Rodriguez</Text>
                 <Text fontSize="sm" color="gray.500">
-                  Miami, FL • Refinance
+                  Estates • Refinance Champion
                 </Text>
               </Box>
               <Box
@@ -554,13 +549,12 @@ export const Home: React.FC = () => {
                   ))}
                 </HStack>
                 <Text mb={4} color="gray.700" fontStyle="italic">
-                  "After being rejected by two banks, PMF found a program that
-                  worked for us. They fought for our approval and we're now in
-                  our dream home!"
+                  "After getting knocked by two banks, APEX clutched up with a perfect loadout.
+                  They fought for our approval and we claimed victory in our dream home!"
                 </Text>
                 <Text fontWeight="bold">David & Lisa Chen</Text>
                 <Text fontSize="sm" color="gray.500">
-                  Orlando, FL • Home Purchase
+                  Gardens • Victory Secured
                 </Text>
               </Box>
             </SimpleGrid>
@@ -577,12 +571,12 @@ export const Home: React.FC = () => {
           <Container maxW="container.md">
             <VStack spacing={6} textAlign="center">
               <Heading as="h2" fontSize={{ base: "3xl", md: "4xl" }}>
-                Ready to Take the Next Step?
+                Ready to Drop In?
               </Heading>
               <Text fontSize={{ base: "lg", md: "xl" }} opacity={0.95}>
-                Join 10,000+ Florida families who trusted PMF to make their
-                homeownership dreams a reality. Start your free
-                pre-qualification now—no obligation, no credit check.
+                Join 10,000+ Olympus legends who trusted APEX to secure their
+                ultimate victory. Start your free pre-qualification now—no risk,
+                no credit impact. Just pure tactical advantage.
               </Text>
               <Button
                 size="lg"
@@ -603,15 +597,15 @@ export const Home: React.FC = () => {
                 <HStack spacing={6} flexWrap="wrap" justify="center">
                   <HStack>
                     <FaShieldAlt />
-                    <Text fontSize="sm">Bank‑grade encryption</Text>
+                    <Text fontSize="sm">Gold Shield Encryption</Text>
                   </HStack>
                   <HStack>
                     <FaCheckCircle />
-                    <Text fontSize="sm">Won't Affect Credit</Text>
+                    <Text fontSize="sm">Zero Credit Impact</Text>
                   </HStack>
                   <HStack>
                     <FaCheckCircle />
-                    <Text fontSize="sm">100% Free & Secure</Text>
+                    <Text fontSize="sm">100% Free Drop</Text>
                   </HStack>
                 </HStack>
                 <Text fontSize="xs" opacity={0.7} mt={4}>
@@ -637,8 +631,8 @@ export const Home: React.FC = () => {
                   APEX Residential Finance
                 </Heading>
                 <Text fontSize="sm" opacity={0.8}>
-                  Making homeownership dreams come true across Florida since who
-                  knows whens.
+                  Making homeownership dreams come true across Olympus since the
+                  games began.
                 </Text>
               </Box>
               <Box>
@@ -678,7 +672,7 @@ export const Home: React.FC = () => {
                     📧 apex@homes.com
                   </Text>
                   <Text fontSize="sm" opacity={0.8}>
-                    📍 Florida
+                    📍 Olympus
                   </Text>
                 </VStack>
               </Box>
