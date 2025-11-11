@@ -20,6 +20,7 @@ export interface PersonalInfo {
 }
 
 export interface EmploymentInfo {
+  isUnemployed?: boolean;
   employerName?: string;
   phone?: string;
   street?: string;
@@ -45,9 +46,21 @@ export interface EmploymentInfo {
 }
 
 export interface AssetsLiabilitiesInfo {
-  assetsAccounts?: { accountType: string; institution: string; accountNumber: string; value: string }[];
+  assetsAccounts?: {
+    accountType: string;
+    institution: string;
+    accountNumber: string;
+    value: string;
+  }[];
   otherAssets?: { type: string; value: string }[];
-  liabilities?: { accountType: string; company: string; accountNumber: string; balance: string; payment: string; toBePaidOff: boolean }[];
+  liabilities?: {
+    accountType: string;
+    company: string;
+    accountNumber: string;
+    balance: string;
+    payment: string;
+    toBePaidOff: boolean;
+  }[];
   otherLiabilities?: { type: string; payment: string }[];
 }
 
@@ -112,4 +125,6 @@ export interface LoanAppContextType {
   updateDeclarations: (info: Partial<DeclarationsInfo>) => void;
 }
 
-export const LoanAppContext = createContext<LoanAppContextType | undefined>(undefined);
+export const LoanAppContext = createContext<LoanAppContextType | undefined>(
+  undefined
+);

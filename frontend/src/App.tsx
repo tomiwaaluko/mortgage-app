@@ -10,6 +10,7 @@ import { Review } from "./pages/Review";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { AuthPrompt } from "./pages/AuthPrompt";
+import { Dashboard } from "./pages/Dashboard";
 import { Layout } from "./ui/Layout";
 import { ScrollToTop } from "./ui/ScrollToTop";
 import { Declarations } from "./pages/Declarations";
@@ -35,6 +36,14 @@ function App() {
             element={
               <Layout>
                 <AuthPrompt />
+              </Layout>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <Layout>
+                <Dashboard />
               </Layout>
             }
           />

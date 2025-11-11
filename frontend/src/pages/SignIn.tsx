@@ -65,7 +65,7 @@ export default function SignIn() {
         duration: 3000,
         isClosable: true,
       });
-      navigate("/personal-info");
+      navigate("/dashboard");
     } catch (error) {
       toast({
         title: "Sign in failed",
