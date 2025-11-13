@@ -1,4 +1,4 @@
-import { expect, afterEach } from "vitest";
+import { afterEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 
@@ -7,29 +7,24 @@ afterEach(() => {
   cleanup();
 });
 
-// Mock localStorage
+// Mock localStorage with proper typing
+const storage: Record<string, string> = {};
+
 const localStorageMock = {
-  getItem: (key: string) => {
-    return localStorageMock[key] || null;
+  getItem: (key: string): string | null => {
+    return storage[key] || null;
   },
-  setItem: (key: string, value: string) => {
-    localStorageMock[key] = value;
+  setItem: (key: string, value: string): void => {
+    storage[key] = value;
   },
-  removeItem: (key: string) => {
-    delete localStorageMock[key];
+  removeItem: (key: string): void => {
+    delete storage[key];
   },
-  clear: () => {
-    Object.keys(localStorageMock).forEach((key) => {
-      if (
-        key !== "getItem" &&
-        key !== "setItem" &&
-        key !== "removeItem" &&
-        key !== "clear"
-      ) {
-        delete localStorageMock[key];
-      }
+  clear: (): void => {
+    Object.keys(storage).forEach((key) => {
+      delete storage[key];
     });
   },
 };
 
-global.localStorage = localStorageMock as Storage;
+globalThis.localStorage = localStorageMock as Storage;

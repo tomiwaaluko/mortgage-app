@@ -72,7 +72,7 @@ export const AdminApplicationDetail: React.FC = () => {
 
     async function load() {
       try {
-        const app = await getApplicationById(id);
+        const app = await getApplicationById(id!);
         if (!cancelled) setApplication(app);
       } catch (err: any) {
         console.error("Error loading application:", err);
@@ -99,7 +99,12 @@ export const AdminApplicationDetail: React.FC = () => {
   if (loading || (user && user.role !== "admin" && isLoading)) {
     return (
       <AnimatedPage>
-        <Box minH="80vh" display="flex" alignItems="center" justifyContent="center">
+        <Box
+          minH="80vh"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Spinner size="xl" />
         </Box>
       </AnimatedPage>
@@ -111,7 +116,12 @@ export const AdminApplicationDetail: React.FC = () => {
   if (isLoading) {
     return (
       <AnimatedPage>
-        <Box minH="80vh" display="flex" alignItems="center" justifyContent="center">
+        <Box
+          minH="80vh"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Spinner size="xl" />
         </Box>
       </AnimatedPage>
@@ -124,7 +134,9 @@ export const AdminApplicationDetail: React.FC = () => {
         <Container maxW="4xl" py={10}>
           <VStack spacing={4}>
             <Heading size="md">Application not found</Heading>
-            <Button onClick={() => navigate("/admin/dashboard")}>Back to Dashboard</Button>
+            <Button onClick={() => navigate("/admin/dashboard")}>
+              Back to Dashboard
+            </Button>
           </VStack>
         </Container>
       </AnimatedPage>
@@ -152,7 +164,12 @@ export const AdminApplicationDetail: React.FC = () => {
       <Container maxW="5xl" py={10}>
         <VStack align="stretch" spacing={6}>
           {/* Header */}
-          <HStack justify="space-between" align="center" flexWrap="wrap" gap={4}>
+          <HStack
+            justify="space-between"
+            align="center"
+            flexWrap="wrap"
+            gap={4}
+          >
             <Box>
               <Heading size="lg">Application Details</Heading>
               <Text color="gray.600">ID: {application._id}</Text>
@@ -164,7 +181,10 @@ export const AdminApplicationDetail: React.FC = () => {
               <Badge colorScheme={statusColor[approval] || "gray"}>
                 {approval.toUpperCase()}
               </Badge>
-              <Button variant="outline" onClick={() => navigate("/admin/dashboard")}>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/admin/dashboard")}
+              >
                 Back to Dashboard
               </Button>
             </HStack>
@@ -248,7 +268,9 @@ export const AdminApplicationDetail: React.FC = () => {
                   <Text fontSize="xs" color="gray.500" fontWeight="bold">
                     EMPLOYER
                   </Text>
-                  <Text>{application.employmentInfo.employerName || "N/A"}</Text>
+                  <Text>
+                    {application.employmentInfo.employerName || "N/A"}
+                  </Text>
                 </Box>
                 <Box>
                   <Text fontSize="xs" color="gray.500" fontWeight="bold">
@@ -284,7 +306,9 @@ export const AdminApplicationDetail: React.FC = () => {
                   <Text fontSize="xs" color="gray.500" fontWeight="bold">
                     PROPERTY ADDRESS
                   </Text>
-                  <Text>{application.loanProperty.propertyAddress || "N/A"}</Text>
+                  <Text>
+                    {application.loanProperty.propertyAddress || "N/A"}
+                  </Text>
                 </Box>
                 <Box>
                   <Text fontSize="xs" color="gray.500" fontWeight="bold">
@@ -306,7 +330,9 @@ export const AdminApplicationDetail: React.FC = () => {
                 </Box>
               </SimpleGrid>
             ) : (
-              <Text color="gray.500">No loan/property information on file.</Text>
+              <Text color="gray.500">
+                No loan/property information on file.
+              </Text>
             )}
           </Card>
 
@@ -316,7 +342,10 @@ export const AdminApplicationDetail: React.FC = () => {
           <Divider />
 
           <Box textAlign="right">
-            <Button variant="outline" onClick={() => navigate("/admin/dashboard")}>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/admin/dashboard")}
+            >
               Back to Dashboard
             </Button>
           </Box>

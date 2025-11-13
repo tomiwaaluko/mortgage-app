@@ -14,7 +14,7 @@ import { useAuth } from "../hooks/useAuth";
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   // Define steps in order
   const steps = [
@@ -74,7 +74,7 @@ export const Header: React.FC = () => {
             <HStack>
               <Button
                 onClick={async () => {
-                  navigate("/profile")
+                  navigate("/profile");
                 }}
                 colorScheme="blue"
                 size="md"
@@ -84,7 +84,7 @@ export const Header: React.FC = () => {
               </Button>
               <Button
                 onClick={async () => {
-                  navigate("/dashboard")
+                  navigate("/dashboard");
                 }}
                 colorScheme="blue"
                 size="md"

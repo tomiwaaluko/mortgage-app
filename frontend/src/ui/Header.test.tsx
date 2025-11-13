@@ -45,6 +45,8 @@ describe("Header Component", () => {
       user: {
         _id: "123",
         email: "test@example.com",
+        firstName: "Test",
+        lastName: "User",
         role: "customer",
       },
       loading: false,

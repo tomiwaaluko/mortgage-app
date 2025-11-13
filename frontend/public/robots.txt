@@ -1,3 +1,19 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /personal-info
+Disallow: /employment-info
+Disallow: /assets-liabilities
+Disallow: /real-estate-info
+Disallow: /loan-property-info
+Disallow: /declarations
+Disallow: /review
+
+# Sitemap location
+Sitemap: https://cop4331-g8mern.xyz/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 10
