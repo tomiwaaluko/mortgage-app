@@ -193,7 +193,9 @@ function App() {
             path="/profile"
             element={
               <Layout>
-                <Profile />
+                <AuthRoute>
+                  <Profile />
+                </AuthRoute>
               </Layout>
             }
           />

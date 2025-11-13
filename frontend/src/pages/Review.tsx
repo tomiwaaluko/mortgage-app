@@ -20,6 +20,7 @@ import { useLoanApp } from "../hooks/useLoanApp";
 import { AnimatedPage } from "../ui/AnimatedPage";
 
 import { submitLoanApplication } from "../lib/api";
+import { fieldNames } from "../lib/consts";
 
 const DataRow: React.FC<{ label: string; value: any }> = ({ label, value }) => (
   <Flex justify="space-between" py={1} borderBottom="1px solid #EDF2F7">
@@ -146,7 +147,7 @@ export const Review: React.FC = () => {
                 </Flex>
                 <Divider my={2} />
                 {Object.entries(s.section).map(([k, v]) => (
-                  <DataRow key={k} label={k} value={v || "-"} />
+                  <DataRow key={k} label={fieldNames[k] || k} value={v || "-"} />
                 ))}
               </Box>
             ))}

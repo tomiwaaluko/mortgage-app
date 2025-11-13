@@ -31,7 +31,7 @@ async function sendVerificationEmail(email, token) {
   const verifyUrl = `${process.env.CLIENT_ORIGIN || "http://localhost:5173"}/verify-email?token=${token}`;
 
   await transporter.sendMail({
-    from: `"Your App" <${process.env.SMTP_USER}>`,
+    from: `"APEX Residental Finance" <${process.env.SMTP_USER}>`,
     to: email,
     subject: "Verify your email",
     html: `
@@ -631,7 +631,7 @@ app.post("/api/auth/request-password-reset", async (req, res) => {
 
     try {
       await transporter.sendMail({
-        from: `"Your App" <${process.env.SMTP_USER}>`,
+        from: `"APEX Residental Finance" <${process.env.SMTP_USER}>`,
         to: user.email,
         subject: "Reset your password",
         html: `
@@ -699,9 +699,6 @@ app.post("/api/auth/reset-password", async (req, res) => {
       }
     );
 
-    // Optional: also clear refreshToken to force logout on other devices
-    // await Users.updateOne({ _id: user._id }, { $unset: { refreshToken: "" } });
-
     return res.json({ ok: true, message: "Password reset successfully" });
   } catch (err) {
     console.error("reset-password error:", err);
@@ -724,21 +721,17 @@ app.post("/api/auth/change-password", auth, async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Check current password
     const ok = await bcrypt.compare(currentPassword, user.passwordHash);
     if (!ok) {
       return res.status(400).json({ error: "Current password is incorrect" });
     }
 
-    // Hash new password
     const passwordHash = await bcrypt.hash(newPassword, 12);
 
     await Users.updateOne(
       { _id: user._id },
       {
         $set: { passwordHash },
-        // Optional: clear refresh token to force re-login on other devices
-        // $unset: { refreshToken: "" },
       }
     );
 
