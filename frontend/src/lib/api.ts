@@ -212,3 +212,61 @@ export async function updateApplicationApproval(
 
   return data as { ok: true; applicationId: string; approval: "approved" | "denied" };
 }
+
+export type UpdateProfileBody = {
+  firstName?: string;
+  lastName?: string;
+};
+
+export async function updateProfile(body: UpdateProfileBody) {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
+
+  const res = await fetch("/api/auth/me", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || data.message || "Failed to update profile");
+  }
+
+  return data.user;
+}
+
+export type ChangePasswordBody = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+export async function changePassword(body: ChangePasswordBody) {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
+
+  const res = await fetch("/api/auth/change-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || data.message || "Failed to change password");
+  }
+
+  return data;
+}

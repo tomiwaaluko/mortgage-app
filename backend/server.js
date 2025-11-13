@@ -382,6 +382,48 @@ app.get("/api/auth/me", auth, async (req, res) => {
     res.json({ ok: true, user });
 });
 
+app.patch("/api/auth/me", auth, async (req, res) => {
+  try {
+    const userId = req.user.sub;
+    const { firstName, lastName } = req.body || {};
+
+    if (!firstName && !lastName) {
+      return res
+        .status(400)
+        .json({ error: "Nothing to update. Provide firstName or lastName." });
+    }
+
+    const Users = req.db.collection("Users");
+
+    const update = {
+      $set: {
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
+        updatedAt: new Date(),
+      },
+    };
+
+    const result = await Users.updateOne(
+      { _id: new ObjectId(userId) },
+      update
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const updatedUser = await Users.findOne(
+      { _id: new ObjectId(userId) },
+      { projection: { passwordHash: 0, refreshToken: 0 } }
+    );
+
+    return res.json({ ok: true, user: updatedUser });
+  } catch (err) {
+    console.error("Update profile error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.post("/api/submit-application", auth, async (req, res) => {
     try {
         const userId = req.user.sub;
@@ -667,6 +709,45 @@ app.post("/api/auth/reset-password", async (req, res) => {
   }
 });
 
+app.post("/api/auth/change-password", auth, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body || {};
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: "Missing current or new password" });
+    }
+
+    const Users = req.db.collection("Users");
+    const user = await Users.findOne({ _id: new ObjectId(req.user.sub) });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check current password
+    const ok = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!ok) {
+      return res.status(400).json({ error: "Current password is incorrect" });
+    }
+
+    // Hash new password
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+
+    await Users.updateOne(
+      { _id: user._id },
+      {
+        $set: { passwordHash },
+        // Optional: clear refresh token to force re-login on other devices
+        // $unset: { refreshToken: "" },
+      }
+    );
+
+    return res.json({ ok: true, message: "Password changed successfully" });
+  } catch (err) {
+    console.error("Change password error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 const PORT = process.env.PORT || 3001;

@@ -23,6 +23,7 @@ import { AdminApplicationDetail } from "./pages/AdminApplicationDetail";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Profile from "./pages/Profile";
 
 function App() {
   const location = useLocation();
@@ -185,6 +186,14 @@ function App() {
             element={
               <Layout>
                 <ResetPassword />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Layout>
+                <Profile />
               </Layout>
             }
           />
