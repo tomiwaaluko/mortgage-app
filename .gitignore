@@ -36,3 +36,6 @@ pnpm-debug.log*
 # Coverage
 coverage/
 *.lcov
+
+# Documentation
+TESTING_SETUP.md
