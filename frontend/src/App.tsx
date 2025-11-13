@@ -14,6 +14,8 @@ import { Dashboard } from "./pages/Dashboard";
 import { Layout } from "./ui/Layout";
 import { ScrollToTop } from "./ui/ScrollToTop";
 import { Declarations } from "./pages/Declarations";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   const location = useLocation();
