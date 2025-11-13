@@ -12,6 +12,7 @@ import {
   IconButton,
   useToast,
   VStack,
+  Spinner
 } from "@chakra-ui/react";
 import { AnimatedPage } from "../ui/AnimatedPage";
 import { useNavigate } from "react-router-dom";
@@ -20,10 +21,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 
 import { signIn } from "../lib/api";
+import { useAuth } from "../hooks/useAuth";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -46,6 +48,13 @@ export default function SignIn() {
   const navigate = useNavigate();
   const toast = useToast();
   const [toggle, setToggle] = useState<boolean>(false);
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const {
     register,
@@ -77,6 +86,14 @@ export default function SignIn() {
       });
     }
   };
+
+  if (loading) {
+    return (
+       <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
+         <Spinner size="xl" />
+       </Box>     
+    )
+  }
 
   return (
     <AnimatedPage>

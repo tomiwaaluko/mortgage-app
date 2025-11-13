@@ -106,7 +106,7 @@ export const Dashboard: React.FC = () => {
         <VStack spacing={8} align="stretch">
           <Box>
             <Heading size="xl" mb={2}>
-              Welcome Back!
+              Dashboard
             </Heading>
             <Text color="gray.600" fontSize="lg">
               Manage your pre-qualification application

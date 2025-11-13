@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
   Divider,
   Icon,
   Container,
+  Spinner,
 } from "@chakra-ui/react";
 import { AnimatedPage } from "../ui/AnimatedPage";
 import { useNavigate } from "react-router-dom";
@@ -20,9 +21,25 @@ import {
   FaClock,
   FaCheckCircle,
 } from "react-icons/fa";
+import { useAuth } from "../hooks/useAuth";
 
 export const AuthPrompt: React.FC = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return (
+      <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
+        <Spinner size="xl" />
+      </Box>
+    )
+  }
 
   return (
     <AnimatedPage>

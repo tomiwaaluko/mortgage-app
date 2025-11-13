@@ -86,21 +86,31 @@ export const Header: React.FC = () => {
             <Button
               onClick={() => signOut()}
               colorScheme="blue"
-              size="sm"
+              size="md"
               isLoading={loading}
             >
               Sign Out
             </Button>
             :
-            <Button
-              onClick={() => navigate("/sign-in")}
-              colorScheme="blue"
-              size="sm"
-              isLoading={loading}
-            >
-              Sign In
-            </Button>
+            <HStack>
+              <Button
+                onClick={() => navigate("/sign-in")}
+                colorScheme="blue"
+                variant="outline"
+                size="md"
+              >
+                Sign In
+              </Button>
+              <Button
+                onClick={() => navigate("/sign-up")}
+                colorScheme="blue"
+                size="md"
+              >
+                Get Started
+              </Button>
+            </HStack>
           }
+
         </HStack>
       </Flex>
 

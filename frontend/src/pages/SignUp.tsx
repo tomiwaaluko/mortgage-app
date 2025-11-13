@@ -12,6 +12,7 @@ import {
   IconButton,
   useToast,
   VStack,
+  Spinner,
 } from "@chakra-ui/react";
 import { AnimatedPage } from "../ui/AnimatedPage";
 import { useNavigate } from "react-router-dom";
@@ -20,8 +21,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ImEye, ImEyeBlocked } from "react-icons/im";
+import { useAuth } from "../hooks/useAuth";
 
 import { signUp } from "../lib/api";
 
@@ -54,7 +56,14 @@ const schema = yup
 export default function SignUp() {
   const navigate = useNavigate();
   const toast = useToast();
+  const { user, loading } = useAuth();
   const [toggle, setToggle] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const {
     register,
@@ -86,7 +95,7 @@ export default function SignUp() {
         isClosable: true,
       });
 
-      navigate("/personal-info");
+      navigate("/dashboard");
     } catch (e: any) {
       const fieldErrors = e?.details?.fieldErrors as
         | Record<string, string>
@@ -112,6 +121,14 @@ export default function SignUp() {
       });
     }
   };
+
+  if (loading) {
+    return (
+       <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
+         <Spinner size="xl" />
+       </Box>     
+    )
+  }
 
   return (
     <AnimatedPage>
