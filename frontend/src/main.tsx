@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import { LoanAppProvider } from "./providers/LoanAppProvider";
+import ErrorBoundary from "./ui/ErrorBoundary";
 import App from "./App";
 
 const theme = extendTheme({
@@ -36,12 +37,14 @@ const theme = extendTheme({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <LoanAppProvider>
-        <BrowserRouter>
-        <App />
-      </BrowserRouter>
-      </LoanAppProvider>
-    </ChakraProvider>
+    <ErrorBoundary>
+      <ChakraProvider theme={theme}>
+        <LoanAppProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </LoanAppProvider>
+      </ChakraProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
