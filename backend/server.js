@@ -43,6 +43,15 @@ async function sendVerificationEmail(email, token) {
   });
 }
 
+const PASSWORD_RESET_SECRET =
+  process.env.JWT_PASSWORD_RESET_SECRET || "pw-reset-secret";
+const PASSWORD_RESET_TTL = "1h";
+
+function signPasswordResetToken(payload) {
+  return jwt.sign(payload, PASSWORD_RESET_SECRET, {
+    expiresIn: PASSWORD_RESET_TTL,
+  });
+}
 
 const app = express();
 app.use(express.json());
@@ -541,6 +550,124 @@ app.get("/api/admin/applications/:id", auth, requireAdmin, async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+app.post("/api/auth/request-password-reset", async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    if (!email) {
+      return res.status(400).json({ error: "Missing email" });
+    }
+
+    const Users = req.db.collection("Users");
+    const user = await Users.findOne({ email });
+
+    if (!user) {
+      return res.json({
+        ok: true,
+        message: "If that email exists, a reset link has been sent.",
+      });
+    }
+
+    if (!user.emailVerified) {
+      return res.status(400).json({
+        error: "Please verify your email before resetting your password.",
+      });
+    }
+
+    const resetToken = signPasswordResetToken({
+      sub: user._id.toString(),
+      email: user.email,
+      type: "password-reset",
+    });
+
+    await Users.updateOne(
+      { _id: user._id },
+      { $set: { passwordResetToken: resetToken } }
+    );
+
+    const resetUrl = `${process.env.CLIENT_ORIGIN || "http://localhost:5173"}/reset-password?token=${resetToken}`;
+
+    try {
+      await transporter.sendMail({
+        from: `"Your App" <${process.env.SMTP_USER}>`,
+        to: user.email,
+        subject: "Reset your password",
+        html: `
+          <p>You requested a password reset.</p>
+          <p>Click the link below to set a new password (valid for 1 hour):</p>
+          <p><a href="${resetUrl}">Reset Password</a></p>
+          <p>If you didn't request this, you can ignore this email.</p>
+        `,
+      });
+    } catch (mailErr) {
+      console.error("Error sending password reset email:", mailErr);
+      return res.status(500).json({ error: "Failed to send reset email" });
+    }
+
+    return res.json({
+      ok: true,
+      message: "If that email exists, a reset link has been sent.",
+    });
+  } catch (err) {
+    console.error("request-password-reset error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const { token, password } = req.body || {};
+
+    if (!token || !password) {
+      return res.status(400).json({ error: "Missing token or password" });
+    }
+
+    let payload;
+    try {
+      payload = jwt.verify(token, PASSWORD_RESET_SECRET);
+    } catch (err) {
+      console.error("Invalid/expired password reset token:", err);
+      return res.status(400).json({ error: "Invalid or expired reset token" });
+    }
+
+    if (payload.type !== "password-reset") {
+      return res.status(400).json({ error: "Invalid token type" });
+    }
+
+    const Users = req.db.collection("Users");
+    const user = await Users.findOne({ _id: new ObjectId(payload.sub) });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.passwordResetToken && user.passwordResetToken !== token) {
+      return res
+        .status(400)
+        .json({ error: "Reset link is no longer valid. Please request a new one." });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    await Users.updateOne(
+      { _id: user._id },
+      {
+        $set: { passwordHash },
+        $unset: { passwordResetToken: "" },
+      }
+    );
+
+    // Optional: also clear refreshToken to force logout on other devices
+    // await Users.updateOne({ _id: user._id }, { $unset: { refreshToken: "" } });
+
+    return res.json({ ok: true, message: "Password reset successfully" });
+  } catch (err) {
+    console.error("reset-password error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

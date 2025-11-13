@@ -143,6 +143,15 @@ export default function SignIn() {
                 <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
               </FormControl>
 
+              <Box display="flex" justifyContent="flex-start" mt={-2}>
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => navigate("/forgot-password")}
+                >
+                  Forgot your password?
+                </Button>
+              </Box>
               <Box display="flex" justifyContent="flex-end" mt={6} gap={3}>
                 <Button onClick={() => navigate("/sign-up")} variant="outline">
                   Create Account

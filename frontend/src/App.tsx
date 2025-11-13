@@ -21,6 +21,8 @@ import { RequireAdmin } from "./ui/RequireAdmin";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AdminApplicationDetail } from "./pages/AdminApplicationDetail";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const location = useLocation();
@@ -167,6 +169,22 @@ function App() {
             element={
               <Layout>
                 <VerifyEmail />
+              </Layout>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <Layout>
+                <ForgotPassword />
+              </Layout>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <Layout>
+                <ResetPassword />
               </Layout>
             }
           />
