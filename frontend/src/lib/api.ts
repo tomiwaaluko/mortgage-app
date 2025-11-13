@@ -121,7 +121,7 @@ export async function getUserApplication() {
     }
 
     const data = await res.json();
-    return data;
+    return data.application;
 }
 
 export async function deleteUserApplication() {
@@ -140,4 +140,75 @@ export async function deleteUserApplication() {
   }
 
   return res.json();
+}
+
+export async function getAllApplications() {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
+
+  const res = await fetch("/api/admin/applications", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || "Failed to fetch applications");
+  }
+
+  const data = await res.json();
+  return data;
+}
+
+export async function getApplicationById(id: string) {
+  const token = localStorage.getItem("accessToken");
+
+  const res = await fetch(`/api/admin/applications/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to fetch application details");
+  }
+
+  const data = await res.json();
+  return data.application;
+}
+
+export async function updateApplicationApproval(
+  id: string,
+  approval: "approved" | "denied"
+) {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
+
+  const res = await fetch(`/api/admin/applications/${id}/approval`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+    body: JSON.stringify({ approval }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || "Failed to update approval");
+  }
+
+  return data as { ok: true; applicationId: string; approval: "approved" | "denied" };
 }

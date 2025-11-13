@@ -63,6 +63,12 @@ export const Dashboard: React.FC = () => {
   const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
   const cancelWithdrawRef = React.useRef<HTMLButtonElement | null>(null);  
 
+  const statusColor: Record<string, string> = {
+    approved: "green",
+    pending : "yellow",
+    denied : "red",
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -255,9 +261,6 @@ export const Dashboard: React.FC = () => {
                   <Heading size="sm" mb={1}>
                     Application Status
                   </Heading>
-                  <Text fontSize="sm" color="gray.600">
-                    Submitted
-                  </Text>
                   {existingApp.updatedAt && (
                     <Text fontSize="xs" color="gray.500" mt={1}>
                       Last updated:{" "}
@@ -266,13 +269,13 @@ export const Dashboard: React.FC = () => {
                   )}
                 </Box>
                 <Badge
-                  colorScheme="green"
+                  colorScheme={statusColor[existingApp.approval]}
                   fontSize="xs"
                   px={3}
                   py={1}
                   borderRadius="full"
                 >
-                  Submitted
+                  {existingApp.approval}
                 </Badge>
               </HStack>
             ) : (
@@ -348,7 +351,6 @@ export const Dashboard: React.FC = () => {
             </Card>
           ) : (
             <>
-              {/* Application Sections */}
               <Box>
                 <Heading size="lg" mb={4}>
                   Your Information

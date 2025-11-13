@@ -17,6 +17,9 @@ import { Declarations } from "./pages/Declarations";
 import AuthRoute from "./ui/AuthRoute";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { RequireAdmin } from "./ui/RequireAdmin";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import { AdminApplicationDetail } from "./pages/AdminApplicationDetail";
 
 function App() {
   const location = useLocation();
@@ -135,6 +138,26 @@ function App() {
                 <AuthRoute>
                   <Review />
                 </AuthRoute>
+              </Layout>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <Layout>
+                <RequireAdmin>
+                  <AdminDashboard />
+                </RequireAdmin>
+              </Layout>
+            }
+          />
+          <Route
+            path="/admin/applications/:id" 
+            element={
+              <Layout>
+                <RequireAdmin>
+                  <AdminApplicationDetail />
+                </RequireAdmin>
               </Layout>
             }
           />

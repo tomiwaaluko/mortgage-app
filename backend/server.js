@@ -80,6 +80,13 @@ function auth(req, res, next) {
     }
 }
 
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+}
+
 app.get("/api/ping", async (_req, res) => {
     try {
         await db.admin().command({ ping: 1 });
@@ -116,10 +123,18 @@ app.post("/api/auth/signup", async (req, res) => {
             createdAt: new Date(),
         });
 
-        const accessToken = signAccessToken({ sub: insertedId.toString(), email });
+        const accessToken = signAccessToken({ sub: insertedId.toString(), email, role: "customer" });
         const refreshToken = signRefreshToken({ sub: insertedId.toString() });
 
-        await Users.updateOne({ _id: insertedId }, { $set: { refreshToken } });
+        await Users.updateOne(
+            { _id: insertedId }, 
+            { 
+                $set: { 
+                    refreshToken,
+                    role: "customer",
+                } 
+            }
+        );
 
         res.cookie("rt", refreshToken, {
             httpOnly: true,
@@ -152,7 +167,7 @@ app.post("/api/auth/login", async (req, res) => {
         if (!ok)
             return res.status(401).json({ error: "Invalid credentials" });
 
-        const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email });
+        const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email, role: user.role });
         const refreshToken = signRefreshToken({ sub: user._id.toString() });
 
         await Users.updateOne({ _id: user._id }, { $set: { refreshToken } });
@@ -231,6 +246,7 @@ app.post("/api/submit-application", auth, async (req, res) => {
             const doc = {
                 userId: userObjectId,
                 status: "submitted",
+                approval: "pending",
                 createdAt: now,
                 updatedAt: now,
                 ...loanData,
@@ -250,6 +266,7 @@ app.post("/api/submit-application", auth, async (req, res) => {
                 $set: {
                     ...loanData,
                     status: "submitted",
+                    approval: "pending",
                     updatedAt: now
                 },
             }
@@ -311,6 +328,73 @@ app.delete("/api/delete-user-application", auth, async (req, res) => {
     }
 });
 
+app.get("/api/admin/applications", auth, requireAdmin, async (req, res) => {
+    try {
+        const Applications = req.db.collection("Applications");
+
+        const apps = await Applications.find({})
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        return res.json({ ok: true, applications: apps });
+    } catch (err) {
+        console.error("Fetching all applications error:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.patch("/api/admin/applications/:id/approval", auth, requireAdmin, async (req, res) => {
+    try {
+        const appId = req.params.id;
+        const { approval } = req.body || {};
+
+        const allowed = ["approved", "denied"];
+        if (!allowed.includes(approval)) {
+            return res.status(400).json({
+                error: "Invalid approval status. Must be 'approved' or 'denied'."
+            });
+        }
+
+        const Applications = req.db.collection("Applications");
+
+        const result = await Applications.updateOne(
+            { _id: new ObjectId(appId) },
+            {
+                $set: {
+                    approval,
+                    approvalUpdatedAt: new Date(),
+                },
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: "Application not found" });
+        }
+
+        return res.json({ ok: true, applicationId: appId, approval });
+    } catch (err) {
+        console.error("Updating application approval error:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.get("/api/admin/applications/:id", auth, requireAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const Applications = req.db.collection("Applications");
+        const application = await Applications.findOne({ _id: new ObjectId(id) });
+
+        if (!application) {
+            return res.status(404).json({ error: "Application not found" });
+        }
+
+        return res.json({ ok: true, application });
+    } catch (err) {
+        console.error("Fetching single application error:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
