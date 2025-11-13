@@ -74,7 +74,7 @@ export const Header: React.FC = () => {
             <HStack>
               <Button
                 onClick={async () => {
-                  navigate("/profile")
+                  navigate("/profile");
                 }}
                 colorScheme="blue"
                 size="md"
@@ -84,7 +84,7 @@ export const Header: React.FC = () => {
               </Button>
               <Button
                 onClick={async () => {
-                  navigate("/dashboard")
+                  navigate("/dashboard");
                 }}
                 colorScheme="blue"
                 size="md"

@@ -160,7 +160,7 @@ function App() {
               element={
                 <Layout>
                   <AuthRoute>
-                    <RealEstateInfo />  
+                    <RealEstateInfo />
                   </AuthRoute>
                 </Layout>
               }
@@ -206,7 +206,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/applications/:id" 
+              path="/admin/applications/:id"
               element={
                 <Layout>
                   <RequireAdmin>
@@ -252,4 +252,5 @@ function App() {
       </AnimatePresence>
     </>
   );
-}export default App;
+}
+export default App;

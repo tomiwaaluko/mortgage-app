@@ -246,12 +246,10 @@ app.post("/api/auth/verify-email", async (req, res) => {
     }
 
     if (user.emailVerifyToken && user.emailVerifyToken !== token) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "Verification link is no longer valid. Please request a new one.",
-        });
+      return res.status(400).json({
+        error:
+          "Verification link is no longer valid. Please request a new one.",
+      });
     }
 
     if (user.emailVerified) {
@@ -431,10 +429,7 @@ app.patch("/api/auth/me", auth, async (req, res) => {
       },
     };
 
-    const result = await Users.updateOne(
-      { _id: new ObjectId(userId) },
-      update
-    );
+    const result = await Users.updateOne({ _id: new ObjectId(userId) }, update);
 
     if (result.matchedCount === 0) {
       return res.status(404).json({ error: "User not found" });
@@ -718,11 +713,9 @@ app.post("/api/auth/reset-password", async (req, res) => {
     }
 
     if (user.passwordResetToken && user.passwordResetToken !== token) {
-      return res
-        .status(400)
-        .json({
-          error: "Reset link is no longer valid. Please request a new one.",
-        });
+      return res.status(400).json({
+        error: "Reset link is no longer valid. Please request a new one.",
+      });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
