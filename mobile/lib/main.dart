@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'utils/app_theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/application_provider.dart';
+import 'routes/app_router.dart';
 
 void main() {
   runApp(const MortgageApp());
@@ -22,57 +23,19 @@ class MortgageApp extends StatelessWidget {
           create: (_) => ApplicationProvider(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Mortgage App',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        home: const SplashScreen(),
-      ),
-    );
-  }
-}
+      child: Builder(
+        builder: (context) {
+          final authProvider =
+              Provider.of<AuthProvider>(context, listen: false);
+          final appRouter = AppRouter(authProvider);
 
-// Temporary splash screen - will be replaced with proper navigation
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.home_work,
-              size: 100,
-              color: AppTheme.primaryColor,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Mortgage App',
-              style: AppTheme.headingLarge,
-            ),
-            const SizedBox(height: 16),
-            Consumer<AuthProvider>(
-              builder: (context, auth, _) {
-                if (auth.state == AuthState.loading) {
-                  return const CircularProgressIndicator();
-                }
-                if (auth.state == AuthState.authenticated) {
-                  return Text(
-                    'Welcome back, ${auth.user?.firstName ?? "User"}!',
-                    style: AppTheme.bodyLarge,
-                  );
-                }
-                return Text(
-                  'Loading...',
-                  style: AppTheme.bodyMedium,
-                );
-              },
-            ),
-          ],
-        ),
+          return MaterialApp.router(
+            title: 'Mortgage App',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            routerConfig: appRouter.router,
+          );
+        },
       ),
     );
   }

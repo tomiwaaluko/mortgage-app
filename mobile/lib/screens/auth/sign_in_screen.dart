@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
-import '../utils/app_theme.dart';
-import '../utils/validators.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/common_widgets.dart';
+import 'package:go_router/go_router.dart';
+import '../../providers/auth_provider.dart';
+import '../../utils/app_theme.dart';
+import '../../utils/validators.dart';
+import '../../widgets/custom_text_field.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/common_widgets.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -39,7 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       if (success && mounted) {
         // Navigate to dashboard
-        Navigator.pushReplacementNamed(context, '/dashboard');
+        context.go('/dashboard');
       }
     }
   }
@@ -125,7 +126,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: TextButtonLink(
                           text: 'Forgot Password?',
                           onPressed: () {
-                            Navigator.pushNamed(context, '/forgot-password');
+                            context.go('/forgot-password');
                           },
                         ),
                       ),
@@ -146,10 +147,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           TextButtonLink(
                             text: 'Sign Up',
                             onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                '/sign-up',
-                              );
+                              context.go('/signup');
                             },
                           ),
                         ],

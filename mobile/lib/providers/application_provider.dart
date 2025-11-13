@@ -103,6 +103,100 @@ class ApplicationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Update local application with map of fields
+  void updateLocalApplication(Map<String, dynamic> fields) {
+    if (_application != null) {
+      _application = _application!.copyWith(
+        borrowerFirstName: fields['borrowerFirstName'],
+        borrowerLastName: fields['borrowerLastName'],
+        borrowerEmail: fields['borrowerEmail'],
+        borrowerPhone: fields['borrowerPhone'],
+        borrowerSSN: fields['borrowerSSN'],
+        borrowerDOB: fields['borrowerDOB'],
+        currentStreet: fields['currentStreet'],
+        currentCity: fields['currentCity'],
+        currentState: fields['currentState'],
+        currentZip: fields['currentZip'],
+        maritalStatus: fields['maritalStatus'],
+        dependents: fields['dependents'],
+        employerName: fields['employerName'],
+        jobTitle: fields['jobTitle'],
+        employmentType: fields['employmentType'],
+        yearsEmployed: fields['yearsEmployed'],
+        monthlyIncome: fields['monthlyIncome'],
+        employerPhone: fields['employerPhone'],
+        checkingBalance: fields['checkingBalance'],
+        savingsBalance: fields['savingsBalance'],
+        investmentsBalance: fields['investmentsBalance'],
+        retirementBalance: fields['retirementBalance'],
+        otherAssetsBalance: fields['otherAssetsBalance'],
+        creditCardDebt: fields['creditCardDebt'],
+        autoLoanDebt: fields['autoLoanDebt'],
+        studentLoanDebt: fields['studentLoanDebt'],
+        otherDebt: fields['otherDebt'],
+        propertyStreet: fields['propertyStreet'],
+        propertyCity: fields['propertyCity'],
+        propertyState: fields['propertyState'],
+        propertyZip: fields['propertyZip'],
+        estimatedValue: fields['estimatedValue'],
+        loanAmount: fields['loanAmount'],
+        loanTerm: fields['loanTerm'],
+        propertyType: fields['propertyType'],
+        realEstateOwned: fields['realEstateOwned'],
+        bankruptcyHistory: fields['bankruptcyHistory'],
+        foreclosureHistory: fields['foreclosureHistory'],
+        lawsuitHistory: fields['lawsuitHistory'],
+        citizenshipStatus: fields['citizenshipStatus'],
+      );
+    } else {
+      // Create a new application with user ID from current user
+      _application = LoanApplication(
+        userId: 'temp', // This will be updated when submitting
+        borrowerFirstName: fields['borrowerFirstName'],
+        borrowerLastName: fields['borrowerLastName'],
+        borrowerEmail: fields['borrowerEmail'],
+        borrowerPhone: fields['borrowerPhone'],
+        borrowerSSN: fields['borrowerSSN'],
+        borrowerDOB: fields['borrowerDOB'],
+        currentStreet: fields['currentStreet'],
+        currentCity: fields['currentCity'],
+        currentState: fields['currentState'],
+        currentZip: fields['currentZip'],
+        maritalStatus: fields['maritalStatus'],
+        dependents: fields['dependents'],
+        employerName: fields['employerName'],
+        jobTitle: fields['jobTitle'],
+        employmentType: fields['employmentType'],
+        yearsEmployed: fields['yearsEmployed'],
+        monthlyIncome: fields['monthlyIncome'],
+        employerPhone: fields['employerPhone'],
+        checkingBalance: fields['checkingBalance'],
+        savingsBalance: fields['savingsBalance'],
+        investmentsBalance: fields['investmentsBalance'],
+        retirementBalance: fields['retirementBalance'],
+        otherAssetsBalance: fields['otherAssetsBalance'],
+        creditCardDebt: fields['creditCardDebt'],
+        autoLoanDebt: fields['autoLoanDebt'],
+        studentLoanDebt: fields['studentLoanDebt'],
+        otherDebt: fields['otherDebt'],
+        propertyStreet: fields['propertyStreet'],
+        propertyCity: fields['propertyCity'],
+        propertyState: fields['propertyState'],
+        propertyZip: fields['propertyZip'],
+        estimatedValue: fields['estimatedValue'],
+        loanAmount: fields['loanAmount'],
+        loanTerm: fields['loanTerm'],
+        propertyType: fields['propertyType'],
+        realEstateOwned: fields['realEstateOwned'],
+        bankruptcyHistory: fields['bankruptcyHistory'],
+        foreclosureHistory: fields['foreclosureHistory'],
+        lawsuitHistory: fields['lawsuitHistory'],
+        citizenshipStatus: fields['citizenshipStatus'],
+      );
+    }
+    notifyListeners();
+  }
+
   // Update specific fields
   void updateField(LoanApplication Function(LoanApplication) update) {
     if (_application != null) {
@@ -215,6 +309,17 @@ class ApplicationProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // Update application status (Admin only) - alias for updateApprovalStatus
+  Future<bool> updateApplicationStatus({
+    required String applicationId,
+    required String approval,
+  }) async {
+    return updateApprovalStatus(
+      applicationId: applicationId,
+      approval: approval,
+    );
   }
 
   // Create a new draft application
