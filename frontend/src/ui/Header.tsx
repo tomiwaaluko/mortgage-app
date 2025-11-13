@@ -11,7 +11,7 @@ import {
 import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { signOut } from "../lib/api"
+import { signOut } from "../lib/api";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -63,11 +63,11 @@ export const Header: React.FC = () => {
         {/* Center Text */}
         <Text
           display={{ base: "none", md: "block" }}
-          fontSize="lg"
+          fontSize="xl"
           fontWeight="medium"
           color="blue.600"
         >
-          APEX Home Loan Application
+          APEX Residential Finance
         </Text>
 
         {/* Contact and Sign In */}
@@ -82,7 +82,7 @@ export const Header: React.FC = () => {
           >
             (123) 456-7890
           </Button> */}
-          {user ? 
+          {user ? (
             <Button
               onClick={async () => {
                 await signOut();
@@ -94,7 +94,7 @@ export const Header: React.FC = () => {
             >
               Sign Out
             </Button>
-            :
+          ) : (
             <HStack>
               <Button
                 onClick={() => navigate("/sign-in")}
@@ -112,8 +112,7 @@ export const Header: React.FC = () => {
                 Get Started
               </Button>
             </HStack>
-          }
-
+          )}
         </HStack>
       </Flex>
 
