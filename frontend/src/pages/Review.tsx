@@ -19,6 +19,8 @@ import { useNavigate } from "react-router-dom";
 import { useLoanApp } from "../hooks/useLoanApp";
 import { AnimatedPage } from "../ui/AnimatedPage";
 
+import { submitLoanApplication } from "../lib/api";
+
 const DataRow: React.FC<{ label: string; value: any }> = ({ label, value }) => (
   <Flex justify="space-between" py={1} borderBottom="1px solid #EDF2F7">
     <Text fontWeight="medium" color="gray.700">
@@ -45,8 +47,7 @@ export const Review: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate processing time
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await submitLoanApplication(data);
 
       toast({
         title: "Application submitted!",

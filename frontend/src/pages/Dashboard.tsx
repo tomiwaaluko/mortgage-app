@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -16,10 +16,14 @@ import {
   SimpleGrid,
   Badge,
   Divider,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
+  useToast,
+  Spinner,
+  AlertDialog,       
+  AlertDialogBody,   
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { AnimatedPage } from "../ui/AnimatedPage";
 import { useNavigate } from "react-router-dom";
@@ -36,15 +40,101 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
+import { getUserApplication } from "../lib/api";
+import { deleteUserApplication } from "../lib/api";
+
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { data } = useLoanApp();
+  const { 
+    data,
+    updatePersonalInfo,
+    updateEmploymentInfo,
+    updateAssetsLiabilities,
+    updateRealEstate,
+    updateLoanProperty,
+    updateDeclarations,
+  } = useLoanApp();
 
-  // Check if user has started pre-qualification by checking if any personal info exists
+  const toast = useToast();
+  const [existingApp, setExistingApp] = useState<any | null>(null);
+  const [isLoadingExisting, setIsLoadingExisting] = useState(true);
+  const [hasHydratedApp, setHasHydratedApp] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
+  const cancelWithdrawRef = React.useRef<HTMLButtonElement | null>(null);  
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function getData() {
+      try {
+        const app = await getUserApplication();
+        if (!cancelled) {
+          setExistingApp(app);
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          if (err.message !== "Not authenticated") {
+            console.error("Error loading user application:", err);
+            toast({
+              title: "Error loading application",
+              description:
+                "We couldn't load your existing application status. You can still continue your pre-qualification.",
+              status: "warning",
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+        }
+      } finally {
+        if (!cancelled) setIsLoadingExisting(false);
+      }
+    }
+
+    getData();
+    return () => {
+      cancelled = true;
+    };
+  }, [toast]);
+
+  useEffect(() => {
+    if (!existingApp) return;
+    if (hasHydratedApp) return;
+
+    if (existingApp.personalInfo) {
+      updatePersonalInfo(existingApp.personalInfo);
+    }
+    if (existingApp.employmentInfo) {
+      updateEmploymentInfo(existingApp.employmentInfo);
+    }
+    if (existingApp.assetsLiabilities) {
+      updateAssetsLiabilities(existingApp.assetsLiabilities);
+    }
+    if (existingApp.realEstate) {
+      updateRealEstate(existingApp.realEstate);
+    }
+    if (existingApp.loanProperty) {
+      updateLoanProperty(existingApp.loanProperty);
+    }
+    if (existingApp.declarations) {
+      updateDeclarations(existingApp.declarations);
+    }
+
+    setHasHydratedApp(true);
+  }, [
+    existingApp,
+    hasHydratedApp,
+    updatePersonalInfo,
+    updateEmploymentInfo,
+    updateAssetsLiabilities,
+    updateRealEstate,
+    updateLoanProperty,
+    updateDeclarations
+  ]);
+
   const hasStartedPreQualification =
-    data.personalInfo && Object.keys(data.personalInfo).length > 0;
+    !!existingApp || (data.personalInfo && Object.keys(data.personalInfo).length > 0);
 
-  // Check completion status of each section
   const sections = [
     {
       name: "Personal Information",
@@ -96,9 +186,46 @@ export const Dashboard: React.FC = () => {
     },
   ];
 
-  const completedSections = sections.filter((s) => s.completed).length;
-  const totalSections = sections.length;
-  const progressPercent = Math.round((completedSections / totalSections) * 100);
+  const handleWithdrawApplication = async () => {
+    if (!existingApp) return;
+
+    setIsWithdrawing(true);
+    try {
+      await deleteUserApplication();
+
+      setExistingApp(null);
+      setHasHydratedApp(false);
+
+      updatePersonalInfo({});
+      updateEmploymentInfo({});
+      updateAssetsLiabilities({});
+      updateRealEstate({});
+      updateLoanProperty({});
+      updateDeclarations({});
+
+      toast({
+        title: "Application withdrawn",
+        description: "Your application has been removed. You can start a new one anytime.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+
+      setIsWithdrawDialogOpen(false);
+    } catch (err: any) {
+      console.error("Error withdrawing application:", err);
+      toast({
+        title: "Error withdrawing application",
+        description: err.message || "Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsWithdrawing(false);
+      window.location.reload();
+    }
+  };
 
   return (
     <AnimatedPage>
@@ -112,6 +239,48 @@ export const Dashboard: React.FC = () => {
               Manage your pre-qualification application
             </Text>
           </Box>
+
+          {/* Server-side application status */}
+          <Card p={4} borderRadius="lg" borderWidth={1}>
+            {isLoadingExisting ? (
+              <HStack spacing={3}>
+                <Spinner size="sm" />
+                <Text color="gray.600" fontSize="sm">
+                  Checking your application status...
+                </Text>
+              </HStack>
+            ) : existingApp ? (
+              <HStack justify="space-between" align="center" flexWrap="wrap">
+                <Box>
+                  <Heading size="sm" mb={1}>
+                    Application Status
+                  </Heading>
+                  <Text fontSize="sm" color="gray.600">
+                    Submitted
+                  </Text>
+                  {existingApp.updatedAt && (
+                    <Text fontSize="xs" color="gray.500" mt={1}>
+                      Last updated:{" "}
+                      {new Date(existingApp.updatedAt).toLocaleString()}
+                    </Text>
+                  )}
+                </Box>
+                <Badge
+                  colorScheme="green"
+                  fontSize="xs"
+                  px={3}
+                  py={1}
+                  borderRadius="full"
+                >
+                  Submitted
+                </Badge>
+              </HStack>
+            ) : (
+              <Text fontSize="sm" color="gray.600">
+                No application found on file yet.
+              </Text>
+            )}
+          </Card>
 
           {!hasStartedPreQualification ? (
             // User hasn't started pre-qualification yet
@@ -129,11 +298,11 @@ export const Dashboard: React.FC = () => {
                 >
                   <AlertIcon boxSize="40px" mr={0} />
                   <AlertTitle mt={4} mb={1} fontSize="xl">
-                    You Haven't Been Pre-Qualified Yet
+                    You Haven&apos;t Been Pre-Qualified Yet
                   </AlertTitle>
                   <AlertDescription maxWidth="md" fontSize="md">
                     Start your free pre-qualification process now. It only takes
-                    5 minutes and won't affect your credit score.
+                    5 minutes and won&apos;t affect your credit score.
                   </AlertDescription>
                 </Alert>
 
@@ -158,8 +327,8 @@ export const Dashboard: React.FC = () => {
                       </Text>
                       <Text fontSize="sm" color="gray.600">
                         Answer a few simple questions about yourself, your
-                        employment, assets, and the property you're interested
-                        in.
+                        employment, assets, and the property you&apos;re
+                        interested in.
                       </Text>
                     </Box>
                   </HStack>
@@ -178,45 +347,7 @@ export const Dashboard: React.FC = () => {
               </VStack>
             </Card>
           ) : (
-            // User has started pre-qualification - Show detailed dashboard
             <>
-              {/* Progress Overview */}
-              <Card
-                p={8}
-                boxShadow="lg"
-                borderRadius="xl"
-                bg="blue.50"
-                borderColor="blue.200"
-                borderWidth={1}
-              >
-                <HStack
-                  justify="space-between"
-                  align="flex-start"
-                  wrap="wrap"
-                  spacing={6}
-                >
-                  <Box>
-                    <Heading size="md" mb={2}>
-                      Application Progress
-                    </Heading>
-                    <Text color="gray.600">
-                      {completedSections} of {totalSections} sections completed
-                    </Text>
-                  </Box>
-                  <Stat>
-                    <StatLabel>Completion</StatLabel>
-                    <StatNumber fontSize="4xl" color="blue.600">
-                      {progressPercent}%
-                    </StatNumber>
-                    <StatHelpText>
-                      {progressPercent === 100
-                        ? "Ready to submit!"
-                        : "Keep going!"}
-                    </StatHelpText>
-                  </Stat>
-                </HStack>
-              </Card>
-
               {/* Application Sections */}
               <Box>
                 <Heading size="lg" mb={4}>
@@ -359,7 +490,7 @@ export const Dashboard: React.FC = () => {
                             MONTHLY INCOME
                           </Text>
                           <Text fontSize="md">
-                            ${data.employmentInfo.monthlyIncomeBase}
+                            {data.employmentInfo.monthlyIncomeBase}
                           </Text>
                         </Box>
                       )}
@@ -373,7 +504,7 @@ export const Dashboard: React.FC = () => {
                             PROPERTY PRICE
                           </Text>
                           <Text fontSize="md">
-                            ${data.loanProperty.salesPrice}
+                            {data.loanProperty.salesPrice}
                           </Text>
                         </Box>
                       )}
@@ -381,39 +512,80 @@ export const Dashboard: React.FC = () => {
                   </Card>
                 )}
 
-              {/* Action Buttons */}
-              <Card p={6} boxShadow="lg" borderRadius="xl" bg="gray.50">
-                <VStack spacing={4}>
-                  <Heading size="md">Next Steps</Heading>
-                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} w="full">
-                    <Button
-                      size="lg"
-                      colorScheme="blue"
-                      rightIcon={<FaArrowRight />}
-                      onClick={() => navigate("/review")}
+                {existingApp && (
+                    <Card
+                      p={6}
+                      boxShadow="md"
+                      borderRadius="xl"
+                      borderWidth={1}
+                      borderColor="red.200"
+                      bg="red.50"
                     >
-                      Review & Submit Application
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      colorScheme="blue"
-                      onClick={() => {
-                        const firstIncomplete = sections.find(
-                          (s) => !s.completed
-                        );
-                        navigate(firstIncomplete?.route || "/personal-info");
-                      }}
-                    >
-                      Continue Where I Left Off
-                    </Button>
-                  </SimpleGrid>
-                </VStack>
-              </Card>
+                      <HStack justify="space-between" align="flex-start" spacing={4}>
+                        <Box>
+                          <Heading size="md" color="red.600" mb={2}>
+                            Withdraw Application
+                          </Heading>
+                          <Text fontSize="sm" color="red.700">
+                            This will permanently remove your current application.
+                            You&apos;ll be able to start a new application from scratch.
+                          </Text>
+                        </Box>
+                        <Button
+                          colorScheme="red"
+                          variant="solid"
+                          onClick={() => setIsWithdrawDialogOpen(true)}
+                          isLoading={isWithdrawing}
+                          loadingText="Withdrawing..."
+                        >
+                          Withdraw Application
+                        </Button>
+                      </HStack>
+                    </Card>
+                  )}
             </>
           )}
         </VStack>
       </Container>
+      {existingApp && (
+        <AlertDialog
+          isOpen={isWithdrawDialogOpen}
+          leastDestructiveRef={cancelWithdrawRef}
+          onClose={() => !isWithdrawing && setIsWithdrawDialogOpen(false)}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Withdraw Application
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                This will permanently remove your current application and clear your saved answers.
+                Are you sure you want to continue?
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button
+                  ref={cancelWithdrawRef}
+                  onClick={() => setIsWithdrawDialogOpen(false)}
+                  isDisabled={isWithdrawing}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  colorScheme="red"
+                  onClick={handleWithdrawApplication}
+                  ml={3}
+                  isLoading={isWithdrawing}
+                  loadingText="Withdrawing..."
+                >
+                  Withdraw
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      )}
     </AnimatedPage>
   );
 };

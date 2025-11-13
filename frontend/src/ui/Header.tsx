@@ -84,7 +84,10 @@ export const Header: React.FC = () => {
           </Button> */}
           {user ? 
             <Button
-              onClick={() => signOut()}
+              onClick={async () => {
+                await signOut();
+                window.location.reload();
+              }}
               colorScheme="blue"
               size="md"
               isLoading={loading}

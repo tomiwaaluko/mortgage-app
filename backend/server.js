@@ -51,7 +51,7 @@ app.use((req, _res, next) => {
     next();
 });
 
-const ACCESS_TTL = "15m";
+const ACCESS_TTL = "2h";
 const REFRESH_TTL = "7d";
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
@@ -210,6 +210,105 @@ app.get("/api/auth/me", auth, async (req, res) => {
 
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json({ ok: true, user });
+});
+
+app.post("/api/submit-application", auth, async (req, res) => {
+    try {
+        const userId = req.user.sub;
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const Applications = req.db.collection("Applications");
+        const userObjectId = new ObjectId(userId);
+
+        const now = new Date();
+        const loanData = req.body;
+
+        const existing = await Applications.findOne({ userId: userObjectId });
+        if (!existing) {
+            const doc = {
+                userId: userObjectId,
+                status: "submitted",
+                createdAt: now,
+                updatedAt: now,
+                ...loanData,
+            };
+
+            const { insertedId } = await Applications.insertOne(doc);
+
+            return res.json({
+                ok: true,
+                applicationId: insertedId,
+            });
+        }
+
+        await Applications.updateOne(
+            { _id: existing._id },
+            {
+                $set: {
+                    ...loanData,
+                    status: "submitted",
+                    updatedAt: now
+                },
+            }
+        );
+
+        return res.json({
+            ok: true,
+            applicationId: existing._id,
+        });
+    } catch (error) {
+        console.error("Submitting application error: ", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.get("/api/get-user-application", auth, async (req, res) => {
+    try {
+        const userId = req.user.sub;
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const Applications = req.db.collection("Applications");
+
+        const application = await Applications.findOne(
+          { userId: new ObjectId(userId) },
+        );
+
+        if (!application) return res.status(404).json({ error: "User Application not found" });
+        res.json({ ok: true, application });
+    } catch (err) {
+        console.error("Getting user application error:", err);
+        res.status(500).json({ error: "Internal server error "});
+    }
+});
+
+app.delete("/api/delete-user-application", auth, async (req, res) => {
+    try {
+        const userId = req.user.sub;
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const Applications = req.db.collection("Applications");
+        const userObjectId = new ObjectId(userId);
+
+        const result = await Applications.deleteOne({ userId: userObjectId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: "User application not found" });
+        }
+
+        return res.json({ ok: true, deleted: true });
+    } catch (err) {
+        console.error("Deleting user application error:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 
