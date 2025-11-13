@@ -8,7 +8,6 @@ import {
   Box,
   HStack,
 } from "@chakra-ui/react";
-import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { signOut } from "../lib/api"
@@ -72,16 +71,6 @@ export const Header: React.FC = () => {
 
         {/* Contact and Sign In */}
         <HStack spacing={2}>
-          {/* <Button
-            as="a"
-            href="tel:+14075551234"
-            leftIcon={<PhoneIcon />}
-            variant="outline"
-            colorScheme="blue"
-            size="sm"
-          >
-            (123) 456-7890
-          </Button> */}
           {user ? 
             <Button
               onClick={async () => {
