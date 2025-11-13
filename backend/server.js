@@ -77,7 +77,10 @@ app.use(cookieParser());
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    origin: [process.env.CLIENT_ORIGIN || "http://localhost:5173",
+      "https://app.swaggerhub.com",
+      "https://swaggerhub.com"
+    ],
     credentials: true,
   })
 );
