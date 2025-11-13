@@ -14,7 +14,7 @@ import { useAuth } from "../hooks/useAuth";
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   // Define steps in order
   const steps = [
