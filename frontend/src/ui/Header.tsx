@@ -10,10 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { signOut } from "../lib/api"
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, loading } = useAuth();
 
   // Define steps in order
   const steps = [
@@ -69,7 +72,7 @@ export const Header: React.FC = () => {
 
         {/* Contact and Sign In */}
         <HStack spacing={2}>
-          <Button
+          {/* <Button
             as="a"
             href="tel:+14075551234"
             leftIcon={<PhoneIcon />}
@@ -78,14 +81,26 @@ export const Header: React.FC = () => {
             size="sm"
           >
             (123) 456-7890
-          </Button>
-          <Button
-            onClick={() => navigate("/sign-in")}
-            colorScheme="blue"
-            size="sm"
-          >
-            Sign In
-          </Button>
+          </Button> */}
+          {user ? 
+            <Button
+              onClick={() => signOut()}
+              colorScheme="blue"
+              size="sm"
+              isLoading={loading}
+            >
+              Sign Out
+            </Button>
+            :
+            <Button
+              onClick={() => navigate("/sign-in")}
+              colorScheme="blue"
+              size="sm"
+              isLoading={loading}
+            >
+              Sign In
+            </Button>
+          }
         </HStack>
       </Flex>
 

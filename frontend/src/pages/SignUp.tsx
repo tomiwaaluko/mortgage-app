@@ -79,7 +79,7 @@ export default function SignUp() {
       await signUp(values, controller.signal);
 
       toast({
-        title: "Account created",
+        title: "Account created!",
         description: "Welcome! Let's get you pre-qualified!",
         status: "success",
         duration: 3000,
@@ -104,7 +104,7 @@ export default function SignUp() {
       }
 
       toast({
-        title: "Sign Up failed",
+        title: "Sign Up failed!",
         description: e?.message || "Please try again.",
         status: "error",
         duration: 4000,

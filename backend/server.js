@@ -172,6 +172,46 @@ app.post("/api/auth/login", async (req, res) => {
     }
 });
 
+app.post("/api/auth/logout", async (req, res) => {
+    try {
+        const { rt } = req.cookies;
+
+        if (!rt) {
+            return res.status(200).json({ ok: true });
+        }
+
+        const Users = req.db.collection("Users");
+
+        await Users.updateOne(
+            { refreshToken: rt },
+            { $unset: { refreshToken: "" }}
+        );
+
+        res.clearCookie("rt", {
+            httpOnly: true,
+            secure: prod,
+            sameSite: prod ? "lax" : "lax",
+            path: "/api/auth",
+        });
+
+        return res.json({ ok: true });
+    } catch (err) {
+        console.error("Logout error: ", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.get("/api/auth/me", auth, async (req, res) => {
+    const Users = req.db.collection("Users");
+    const user = await Users.findOne(
+        { _id: new ObjectId(req.user.sub) },
+        { projection: { passwordHash: 0, refreshToken: 0 } }
+    );
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ ok: true, user });
+});
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

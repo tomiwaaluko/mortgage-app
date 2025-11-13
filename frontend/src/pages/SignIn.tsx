@@ -59,7 +59,7 @@ export default function SignIn() {
     try {
       await signIn(data);
       toast({
-        title: "Sign in successful",
+        title: "Sign in successful!",
         description: "Welcome back!",
         status: "success",
         duration: 3000,
@@ -68,7 +68,7 @@ export default function SignIn() {
       navigate("/dashboard");
     } catch (error) {
       toast({
-        title: "Sign in failed",
+        title: "Sign in failed!",
         description:
           error instanceof Error ? error.message : "Invalid credentials",
         status: "error",

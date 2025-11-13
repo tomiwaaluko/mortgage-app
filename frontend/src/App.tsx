@@ -14,6 +14,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Layout } from "./ui/Layout";
 import { ScrollToTop } from "./ui/ScrollToTop";
 import { Declarations } from "./pages/Declarations";
+import AuthRoute from "./ui/AuthRoute";
 
 function App() {
   const location = useLocation();
@@ -43,7 +44,9 @@ function App() {
             path="/dashboard"
             element={
               <Layout>
-                <Dashboard />
+                <AuthRoute>
+                  <Dashboard />
+                </AuthRoute>
               </Layout>
             }
           />
@@ -67,7 +70,9 @@ function App() {
             path="/personal-info"
             element={
               <Layout>
-                <PersonalInfo />
+                <AuthRoute>
+                  <PersonalInfo />
+                </AuthRoute>
               </Layout>
             }
           />
@@ -75,7 +80,9 @@ function App() {
             path="/employment-info"
             element={
               <Layout>
-                <EmploymentInfo />
+                <AuthRoute>
+                  <EmploymentInfo />
+                </AuthRoute>
               </Layout>
             }
           />
@@ -83,7 +90,9 @@ function App() {
             path="/assets-liabilities"
             element={
               <Layout>
-                <AssetsLiabilities />
+                <AuthRoute>
+                  <AssetsLiabilities />
+                </AuthRoute>
               </Layout>
             }
           />
@@ -91,7 +100,9 @@ function App() {
             path="/real-estate-info"
             element={
               <Layout>
-                <RealEstateInfo />
+                <AuthRoute>
+                  <RealEstateInfo />  
+                </AuthRoute>
               </Layout>
             }
           />
@@ -99,7 +110,9 @@ function App() {
             path="/loan-property-info"
             element={
               <Layout>
-                <LoanPropertyInfo />
+                <AuthRoute>
+                  <LoanPropertyInfo />
+                </AuthRoute>
               </Layout>
             }
           />
@@ -107,7 +120,9 @@ function App() {
             path="/declarations"
             element={
               <Layout>
-                <Declarations />
+                <AuthRoute>
+                  <Declarations />
+                </AuthRoute>
               </Layout>
             }
           />
@@ -115,7 +130,9 @@ function App() {
             path="/review"
             element={
               <Layout>
-                <Review />
+                <AuthRoute>
+                  <Review />
+                </AuthRoute>
               </Layout>
             }
           />

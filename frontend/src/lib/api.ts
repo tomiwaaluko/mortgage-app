@@ -26,6 +26,8 @@ export async function signUp(body: SignUpBody, signal?: AbortSignal) {
         (err as any).details = data;
         throw err;
     }
+
+    localStorage.setItem("accessToken", data.accessToken);
     return data;
 }
 
@@ -45,5 +47,23 @@ export async function signIn(body: SignInBody, signal?: AbortSignal) {
         (err as any).details = data;
         throw err;   
     }
+
+    localStorage.setItem("accessToken", data.accessToken);
     return data;
+}
+
+export async function signOut() {
+    const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+    });
+
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Logout failed");
+    }
+
+    localStorage.removeItem("accessToken");
+
+    return true;
 }
