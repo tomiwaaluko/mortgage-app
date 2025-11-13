@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { signOut } from "../lib/api";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -72,17 +71,27 @@ export const Header: React.FC = () => {
         {/* Contact and Sign In */}
         <HStack spacing={2}>
           {user ? (
-            <Button
-              onClick={async () => {
-                await signOut();
-                window.location.reload();
-              }}
-              colorScheme="blue"
-              size="md"
-              isLoading={loading}
-            >
-              Sign Out
-            </Button>
+            <HStack>
+              <Button
+                onClick={async () => {
+                  navigate("/profile")
+                }}
+                colorScheme="blue"
+                size="md"
+                variant="outline"
+              >
+                Profile
+              </Button>
+              <Button
+                onClick={async () => {
+                  navigate("/dashboard")
+                }}
+                colorScheme="blue"
+                size="md"
+              >
+                Dashboard
+              </Button>
+            </HStack>
           ) : (
             <HStack>
               <Button

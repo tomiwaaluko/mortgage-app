@@ -56,6 +56,7 @@ const AdminApplicationDetail = lazy(() =>
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 // Loading component
 const PageLoader = () => (
@@ -159,7 +160,7 @@ function App() {
               element={
                 <Layout>
                   <AuthRoute>
-                    <RealEstateInfo />
+                    <RealEstateInfo />  
                   </AuthRoute>
                 </Layout>
               }
@@ -205,7 +206,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/applications/:id"
+              path="/admin/applications/:id" 
               element={
                 <Layout>
                   <RequireAdmin>
@@ -238,11 +239,17 @@ function App() {
                 </Layout>
               }
             />
+            <Route
+              path="/profile"
+              element={
+                <Layout>
+                  <Profile />
+                </Layout>
+              }
+            />
           </Routes>
         </Suspense>
       </AnimatePresence>
     </>
   );
-}
-
-export default App;
+}export default App;
