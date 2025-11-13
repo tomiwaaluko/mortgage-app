@@ -29,7 +29,7 @@ export async function signUp(body: SignUpBody, signal?: AbortSignal) {
         throw err;
     }
 
-    localStorage.setItem("accessToken", data.accessToken);
+    // localStorage.setItem("accessToken", data.accessToken);
     return data;
 }
 

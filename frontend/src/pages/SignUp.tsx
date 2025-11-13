@@ -89,13 +89,16 @@ export default function SignUp() {
 
       toast({
         title: "Account created!",
-        description: "Welcome! Let's get you pre-qualified!",
+        description: "Signup successful, please check your email to verify your account!",
         status: "success",
         duration: 3000,
         isClosable: true,
       });
 
-      navigate("/dashboard");
+      navigate("/verify-email", {
+        replace: true,
+        state: { email: values.email },
+      });
     } catch (e: any) {
       const fieldErrors = e?.details?.fieldErrors as
         | Record<string, string>
@@ -110,6 +113,16 @@ export default function SignUp() {
 
       if (e?.status === 409 && !fieldErrors?.email) {
         setError("email", { type: "server", message: "Email already in use" });
+
+        toast({
+          title: "Email already in use!",
+          description: e?.message || "Please try again.",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+
+        return;
       }
 
       toast({

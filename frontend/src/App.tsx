@@ -20,6 +20,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { RequireAdmin } from "./ui/RequireAdmin";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AdminApplicationDetail } from "./pages/AdminApplicationDetail";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   const location = useLocation();
@@ -158,6 +159,14 @@ function App() {
                 <RequireAdmin>
                   <AdminApplicationDetail />
                 </RequireAdmin>
+              </Layout>
+            }
+          />
+          <Route
+            path="/verify-email"
+            element={
+              <Layout>
+                <VerifyEmail />
               </Layout>
             }
           />

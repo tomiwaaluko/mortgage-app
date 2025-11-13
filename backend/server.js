@@ -6,8 +6,43 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const helmet = require("helmet");
+const nodemailer = require("nodemailer");
 
 dotenv.config();
+
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: false,
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+    }
+});
+
+const EMAIL_VERIFY_SECRET = process.env.JWT_EMAIL_VERIFY_SECRET || "email-secret";
+const EMAIL_VERIFY_TTL = "1d";
+
+function signEmailVerifyToken(payload) {
+  return jwt.sign(payload, EMAIL_VERIFY_SECRET, { expiresIn: EMAIL_VERIFY_TTL });
+}
+
+async function sendVerificationEmail(email, token) {
+  const verifyUrl = `${process.env.CLIENT_ORIGIN || "http://localhost:5173"}/verify-email?token=${token}`;
+
+  await transporter.sendMail({
+    from: `"Your App" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: "Verify your email",
+    html: `
+      <p>Thanks for signing up!</p>
+      <p>Please verify your email by clicking the link below:</p>
+      <p><a href="${verifyUrl}">Verify Email</a></p>
+      <p>If you did not sign up, you can ignore this email.</p>
+    `,
+  });
+}
+
 
 const app = express();
 app.use(express.json());
@@ -118,38 +153,104 @@ app.post("/api/auth/signup", async (req, res) => {
 
         const passwordHash = await bcrypt.hash(password, 12);
         const { insertedId } = await Users.insertOne({
+            firstName,
+            lastName,
             email,
             passwordHash,
             createdAt: new Date(),
+            role: "customer",
+            emailVerified: false,
+            verifiedAt: null,
+            emailVerifyToken: null,
         });
 
-        const accessToken = signAccessToken({ sub: insertedId.toString(), email, role: "customer" });
-        const refreshToken = signRefreshToken({ sub: insertedId.toString() });
+        const verifyToken = signEmailVerifyToken({
+            sub: insertedId.toString(),
+            email,
+            type: "email-verify",
+        });
 
         await Users.updateOne(
             { _id: insertedId }, 
             { 
                 $set: { 
-                    refreshToken,
-                    role: "customer",
+                    emailVerifyToken: verifyToken,
                 } 
             }
         );
 
-        res.cookie("rt", refreshToken, {
-            httpOnly: true,
-            secure: prod,
-            sameSite: prod ? "lax" : "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/api/auth",
-        });
+        try {
+            await sendVerificationEmail(email, verifyToken);
+        } catch (mailErr) {
+            console.error("Error sending verification email: ", mailErr);
+        }
 
-        res.json({ ok: true, user: { id: insertedId, email }, accessToken});
+        return res.json({
+            ok: true,
+            message: "Signup successful, please check your email to verify your account."
+        });
     } catch (e) {
         console.error("Signup error:", e);
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+app.post("/api/auth/verify-email", async (req, res) => {
+  try {
+    const { token } = req.body || {};
+
+    if (!token) {
+      return res.status(400).json({ error: "Missing token" });
+    }
+
+    let payload;
+    try {
+      payload = jwt.verify(token, EMAIL_VERIFY_SECRET);
+    } catch (err) {
+      console.error("Invalid/expired email verification token:", err);
+      return res.status(400).json({ error: "Invalid or expired verification token" });
+    }
+
+    if (payload.type !== "email-verify") {
+      return res.status(400).json({ error: "Invalid token type" });
+    }
+
+    const userId = payload.sub;
+    const Users = req.db.collection("Users");
+
+    const user = await Users.findOne({ _id: new ObjectId(userId) });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.emailVerifyToken && user.emailVerifyToken !== token) { 
+    return res.status(400).json({ error: "Verification link is no longer valid. Please request a new one." });
+    }
+
+    if (user.emailVerified) {
+      return res.json({ ok: true, alreadyVerified: true });
+    }
+
+    await Users.updateOne(
+      { _id: user._id },
+      {
+        $set: {
+          emailVerified: true,
+          verifiedAt: new Date()
+        },
+        $unset: {
+          emailVerifyToken: ""
+        }
+      }
+    );
+
+    return res.json({ ok: true, message: "Email verified successfully!" });
+  } catch (err) {
+    console.error("Verify email error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 app.post("/api/auth/login", async (req, res) => {
     try {
@@ -167,17 +268,24 @@ app.post("/api/auth/login", async (req, res) => {
         if (!ok)
             return res.status(401).json({ error: "Invalid credentials" });
 
+        if (!user.emailVerified) {
+            return res.status(403).json({
+                error: "Email not verified",
+                code: "EMAIL_NOT_VERIFIED",
+            });
+        }
+
         const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email, role: user.role });
         const refreshToken = signRefreshToken({ sub: user._id.toString() });
 
         await Users.updateOne({ _id: user._id }, { $set: { refreshToken } });
 
         res.cookie("rt", refreshToken, {
-        httpOnly: true,
-        secure: prod,
-        sameSite: prod ? "lax" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: "/api/auth",
+            httpOnly: true,
+            secure: prod,
+            sameSite: prod ? "lax" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: "/api/auth",
         });
 
         res.json({ ok: true, user: { id: user._id, email: user.email }, accessToken });
@@ -185,6 +293,44 @@ app.post("/api/auth/login", async (req, res) => {
         console.error("Login error:", e);
         res.status(500).json({ error: "Internal server error" });
     }
+});
+
+app.post("/api/auth/resend-verification", async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    if (!email) return res.status(400).json({ error: "Missing email" });
+
+    const Users = req.db.collection("Users");
+    const user = await Users.findOne({ email });
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+    if (user.emailVerified) {
+      return res.status(400).json({ error: "Email already verified" });
+    }
+
+    const verifyToken = signEmailVerifyToken({
+      sub: user._id.toString(),
+      email: user.email,
+      type: "email-verify",
+    });
+
+    await Users.updateOne(
+      { _id: user._id },
+      { $set: { emailVerifyToken: verifyToken } }
+    );
+
+    try {
+      await sendVerificationEmail(user.email, verifyToken);
+    } catch (mailErr) {
+      console.error("Error resending verification email:", mailErr);
+      return res.status(500).json({ error: "Failed to send verification email" });
+    }
+
+    return res.json({ ok: true, message: "Verification email resent, please check your inbox!" });
+  } catch (err) {
+    console.error("Resend verification error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.post("/api/auth/logout", async (req, res) => {
