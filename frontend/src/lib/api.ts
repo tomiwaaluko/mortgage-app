@@ -66,6 +66,7 @@ export async function signOut() {
     }
 
     localStorage.removeItem("accessToken");
+    window.location.reload();
     
     return true;
 }

@@ -7,20 +7,21 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
-const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// ---- SendGrid Setup ----
+if (!process.env.SENDGRID_API_KEY) {
+  console.warn("[WARN] SENDGRID_API_KEY is not set. Emails will fail.");
+}
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
+// Verified sender in SendGrid (or fallback)
+const MAIL_FROM =
+  process.env.MAIL_FROM || `"APEX Residential Finance" <no-reply@example.com>`;
+
+// ---- Email / Token Helpers ----
 const EMAIL_VERIFY_SECRET =
   process.env.JWT_EMAIL_VERIFY_SECRET || "email-secret";
 const EMAIL_VERIFY_TTL = "1d";
@@ -36,9 +37,9 @@ async function sendVerificationEmail(email, token) {
     process.env.CLIENT_ORIGIN || "http://localhost:5173"
   }/verify-email?token=${token}`;
 
-  await transporter.sendMail({
-    from: `"Your App" <${process.env.SMTP_USER}>`,
+  const msg = {
     to: email,
+    from: MAIL_FROM,
     subject: "Verify your email",
     html: `
       <p>Thanks for signing up!</p>
@@ -46,7 +47,9 @@ async function sendVerificationEmail(email, token) {
       <p><a href="${verifyUrl}">Verify Email</a></p>
       <p>If you did not sign up, you can ignore this email.</p>
     `,
-  });
+  };
+
+  await sgMail.send(msg);
 }
 
 const PASSWORD_RESET_SECRET =
@@ -74,7 +77,10 @@ app.use(cookieParser());
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    origin: [process.env.CLIENT_ORIGIN || "http://localhost:5173",
+      "https://app.swaggerhub.com",
+      "https://swaggerhub.com"
+    ],
     credentials: true,
   })
 );
@@ -202,6 +208,7 @@ app.post("/api/auth/signup", async (req, res) => {
       await sendVerificationEmail(email, verifyToken);
     } catch (mailErr) {
       console.error("Error sending verification email: ", mailErr);
+      // we still allow signup even if email fails
     }
 
     return res.json({
@@ -659,9 +666,9 @@ app.post("/api/auth/request-password-reset", async (req, res) => {
     }/reset-password?token=${resetToken}`;
 
     try {
-      await transporter.sendMail({
-        from: `"Your App" <${process.env.SMTP_USER}>`,
+      await sgMail.send({
         to: user.email,
+        from: MAIL_FROM,
         subject: "Reset your password",
         html: `
           <p>You requested a password reset.</p>
@@ -728,9 +735,6 @@ app.post("/api/auth/reset-password", async (req, res) => {
       }
     );
 
-    // Optional: also clear refreshToken to force logout on other devices
-    // await Users.updateOne({ _id: user._id }, { $unset: { refreshToken: "" } });
-
     return res.json({ ok: true, message: "Password reset successfully" });
   } catch (err) {
     console.error("reset-password error:", err);
@@ -753,21 +757,17 @@ app.post("/api/auth/change-password", auth, async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Check current password
     const ok = await bcrypt.compare(currentPassword, user.passwordHash);
     if (!ok) {
       return res.status(400).json({ error: "Current password is incorrect" });
     }
 
-    // Hash new password
     const passwordHash = await bcrypt.hash(newPassword, 12);
 
     await Users.updateOne(
       { _id: user._id },
       {
         $set: { passwordHash },
-        // Optional: clear refresh token to force re-login on other devices
-        // $unset: { refreshToken: "" },
       }
     );
 
@@ -777,6 +777,7 @@ app.post("/api/auth/change-password", auth, async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server started at ${PORT}!`);

@@ -15,6 +15,7 @@ import {
   AlertDescription,
   SimpleGrid,
   Badge,
+  Flex,
   Divider,
   useToast,
   Spinner,
@@ -24,6 +25,7 @@ import {
   AlertDialogHeader, 
   AlertDialogContent,
   AlertDialogOverlay,
+  Stack,
 } from "@chakra-ui/react";
 import { AnimatedPage } from "../ui/AnimatedPage";
 import { useNavigate } from "react-router-dom";
@@ -42,6 +44,8 @@ import {
 
 import { getUserApplication } from "../lib/api";
 import { deleteUserApplication } from "../lib/api";
+
+import { useAuth } from "../hooks/useAuth";
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -62,6 +66,8 @@ export const Dashboard: React.FC = () => {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
   const cancelWithdrawRef = React.useRef<HTMLButtonElement | null>(null);  
+
+  const { user } = useAuth();
 
   const statusColor: Record<string, string> = {
     approved: "green",
@@ -237,14 +243,36 @@ export const Dashboard: React.FC = () => {
     <AnimatedPage>
       <Container maxW="container.lg" py={10}>
         <VStack spacing={8} align="stretch">
-          <Box>
-            <Heading size="xl" mb={2}>
-              Dashboard
-            </Heading>
-            <Text color="gray.600" fontSize="lg">
-              Manage your pre-qualification application
-            </Text>
-          </Box>
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            justify="space-between"
+            align={{ base: "flex-start", md: "center" }}
+            mb={6}
+            gap={{ base: 4, md: 0 }}
+          >
+            <Box>
+              <Heading size="xl" mb={2}>
+                Dashboard
+              </Heading>
+              <Text color="gray.600" fontSize="lg">
+                Manage your pre-qualification application
+              </Text>
+            </Box>
+
+            {user?.role === "admin" && (
+              <Button
+                colorScheme="blue"
+                width={{ base: "100%", md: "auto" }}
+                alignSelf={{ base: "stretch", md: "center" }}
+                onClick={async () => {
+                  navigate("/admin/dashboard")
+                }}
+              >
+                Admin Dashboard
+              </Button>
+            )}
+          </Flex>
+
 
           {/* Server-side application status */}
           <Card p={4} borderRadius="lg" borderWidth={1}>
@@ -523,8 +551,13 @@ export const Dashboard: React.FC = () => {
                       borderColor="red.200"
                       bg="red.50"
                     >
-                      <HStack justify="space-between" align="flex-start" spacing={4}>
-                        <Box>
+                      <Stack
+                        direction={{ base: "column", md: "row" }}
+                        justify="space-between"
+                        align={{ base: "stretch", md: "flex-start" }}
+                        spacing={4}
+                      >
+                        <Box flex="1">
                           <Heading size="md" color="red.600" mb={2}>
                             Withdraw Application
                           </Heading>
@@ -533,16 +566,18 @@ export const Dashboard: React.FC = () => {
                             You&apos;ll be able to start a new application from scratch.
                           </Text>
                         </Box>
+
                         <Button
                           colorScheme="red"
                           variant="solid"
                           onClick={() => setIsWithdrawDialogOpen(true)}
                           isLoading={isWithdrawing}
                           loadingText="Withdrawing..."
+                          alignSelf={{ base: "stretch", md: "flex-start" }}
                         >
-                          Withdraw Application
+                          Withdraw
                         </Button>
-                      </HStack>
+                      </Stack>
                     </Card>
                   )}
             </>
